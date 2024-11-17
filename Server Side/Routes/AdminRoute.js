@@ -42,6 +42,18 @@ router.post('/add_category', (req, res) => {
     })
 })
 
+router.post('/add_category', (req, res) => {
+    console.log("Add Category API Hit");  // Log to verify if the API is being called
+    const sql = "INSERT INTO category (`name`) VALUES (?)";
+    con.query(sql, [req.body.category], (err, result) => {
+        if (err) {
+            console.error("Error in query:", err); // Log detailed error
+            return res.status(500).json({ Status: false, Error: "Query Error" });
+        }
+        return res.status(200).json({ Status: true });
+    });
+});
+
 // image upload 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -78,13 +90,26 @@ router.post('/add_employee',upload.single('image'), (req, res) => {
     })
 })
 
+// router.get('/employee', (req, res) => {
+//     const sql = "SELECT * FROM employee";
+//     con.query(sql, (err, result) => {
+//         if(err) return res.json({Status: false, Error: "Query Error"})
+//         return res.json({Status: true, Result: result})
+//     })
+// })
+
+
 router.get('/employee', (req, res) => {
-    const sql = "SELECT * FROM employee";
+    const sql = `
+    SELECT e.id, e.name, e.email, e.address, e.salary, e.image, c.name as category_name 
+    FROM employee e
+    JOIN category c ON e.category_id = c.id
+    `;
     con.query(sql, (err, result) => {
-        if(err) return res.json({Status: false, Error: "Query Error"})
-        return res.json({Status: true, Result: result})
-    })
-})
+        if(err) return res.json({ Status: false, Error: "Query Error: " + err });
+        return res.json({ Status: true, Result: result });
+    });
+});
 
 router.get('/employee/:id', (req, res) => {
     const id = req.params.id;

@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Employee = () => {
   const [employee, setEmployee] = useState([]);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -18,16 +18,20 @@ const Employee = () => {
       })
       .catch((err) => console.log(err));
   }, []);
+
   const handleDelete = (id) => {
-    axios.delete('http://localhost:3000/auth/delete_employee/'+id)
-    .then(result => {
-        if(result.data.Status) {
-            window.location.reload()
+    axios
+      .delete("http://localhost:3000/auth/delete_employee/" + id)
+      .then((result) => {
+        if (result.data.Status) {
+          window.location.reload();
         } else {
-            alert(result.data.Error)
+          alert(result.data.Error);
         }
-    })
-  } 
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <div className="px-5 mt-3">
       <div className="d-flex justify-content-center">
@@ -45,22 +49,25 @@ const Employee = () => {
               <th>Email</th>
               <th>Address</th>
               <th>Salary</th>
+              <th>Category</th> {/* Added Category column */}
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {employee.map((e) => (
-              <tr>
+              <tr key={e.id}>
                 <td>{e.name}</td>
                 <td>
                   <img
                     src={`http://localhost:3000/Images/` + e.image}
                     className="employee_image"
+                    alt="Employee"
                   />
                 </td>
                 <td>{e.email}</td>
                 <td>{e.address}</td>
                 <td>{e.salary}</td>
+                <td>{e.category_name}</td> {/* Displaying category name */}
                 <td>
                   <Link
                     to={`/dashboard/edit_employee/` + e.id}
