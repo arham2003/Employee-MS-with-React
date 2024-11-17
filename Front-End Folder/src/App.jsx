@@ -15,6 +15,9 @@ import EmployeeLogin from './Components/EmployeeLogin'
 import EmployeeDetail from './Components/EmployeeDetail'
 import PrivateRoute from './Components/PrivateRoute'
 
+import Projects from './Components/projects/project'
+import ProjectForm from './Components/projects/ProjectForm'
+
 function App() {
   return (
     <BrowserRouter>
@@ -32,6 +35,10 @@ function App() {
         <Route path='/dashboard/employee' element={<Employee />}></Route>
         <Route path='/dashboard/category' element={<Category />}></Route>
         <Route path='/dashboard/profile' element={<Profile />}></Route>
+        <Route path='/dashboard/projects' element={<Projects />}></Route>
+        <Route path='/dashboard/projectForm' element={<ProjectForm />}></Route>
+
+
         <Route path='/dashboard/add_category' element={<AddCategory />}></Route>
         <Route path='/dashboard/add_employee' element={<AddEmployee />}></Route>
         <Route path='/dashboard/edit_employee/:id' element={<EditEmployee />}></Route>
