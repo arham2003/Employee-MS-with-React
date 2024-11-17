@@ -1,31 +1,133 @@
 .project-detail-container {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-  
-.project-details h3 {
-    color: #000000; /* Black color for project name */
-    font-size: 2rem;
-    margin-bottom: 20px;
-}
-  
-.project-details h5 {
-    color: #000000;
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-}
-  
-.project-details .progress {
-    width: 100%;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-  
-.project-details table {
-    width: 800px; /* Increased width of the tables */
-    margin: 20px 0;
-    max-width: 1200px; /* Optional: set a maximum width for larger screens */
+  padding: 20px;
+  text-align: center;
+  background-color: #f9f9f9;
 }
 
+.project-details h3 {
+  color: #4a90e2;
+}
+
+.project-details h5 {
+  margin-top: 20px;
+  color: #333;
+}
+
+table {
+  margin: 20px auto;
+  width: 90%;
+  border-collapse: collapse;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+table th {
+  background-color: #f1f1f1;
+}
+
+table td {
+  background-color: #fff;
+}
+
+button {
+  margin-top: 10px;
+  padding: 8px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+button:focus {
+  outline: none;
+}
+
+.btn-primary {
+  background-color: #28a745; /* Green */
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #218838;
+}
+
+.btn-danger {
+  background-color: #dc3545; /* Red */
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.modal-content {
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.modal-header {
+  background-color: #4a90e2;
+  color: white;
+  border-bottom: 2px solid #ddd;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+label {
+  font-weight: bold;
+  color: #333;
+}
+
+input, select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+input[type="date"] {
+  padding: 6px;
+}
+
+select {
+  padding: 6px;
+}
+
+button[type="submit"] {
+  background-color: #28a745;
+  color: white;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #218838;
+}
+
+.modal-title {
+  font-size: 18px;
+}
+
+h5 {
+  font-size: 16px;
+  font-weight: bold;
+}
