@@ -6,10 +6,7 @@
   font-size: 2rem;
   color: #333;
   font-weight: bold;
-}
-
-.button-container {
-  margin: 20px 0;
+  text-align: center;
 }
 
 .projects-list {
@@ -17,8 +14,7 @@
 }
 
 .card {
-  width: 330%;
-  height: 100%;
+  width: 500px; /* Make the card take the full width of the column */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -31,6 +27,7 @@
 
 .card-body {
   text-align: center;
+  padding: 20px;
 }
 
 .card-title {
