@@ -22,8 +22,32 @@ const ProjectForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData); // You can submit this to your backend
-  };
+
+    // Send a POST request with the form data
+    fetch('http://localhost:3000/projects/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        // Optionally, reset the form or notify the user of success
+        setFormData({
+            projectName: '',
+            customerName: '',
+            startDate: '',
+            expectedDate: '',
+            budget: '',
+            status: '',
+        });
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+};
 
   return (
     <div className="form-container">

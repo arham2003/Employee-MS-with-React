@@ -4,6 +4,7 @@ import { adminRouter } from "./Routes/AdminRoute.js";
 import { EmployeeRouter } from "./Routes/EmployeeRoute.js";
 import Jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
+import { getAllProjects , addProject, getAllProjectParts, getProjectPartsByProjectId, getProjectById} from "./Routes/projects/projectController.js";
 
 const app = express() 
 app.use(cors({
@@ -30,6 +31,14 @@ const verifyUser = (req, res, next) => {
         return res.json({Status: false, Error: "Not autheticated"})
     }
 }
+// -----------------------------------------------------------------------------------
+app.get('/project_parts', getAllProjectParts);  // Fetch all project parts
+app.get('/project_parts/:projectId', getProjectPartsByProjectId);
+app.get('/api/projects/:id', getProjectById);
+
+app.get('/projects',getAllProjects)
+app.post('/projects/add',addProject)
+
 app.get('/verify',verifyUser, (req, res)=> {
     return res.json({Status: true, role: req.role, id: req.id})
 } )
