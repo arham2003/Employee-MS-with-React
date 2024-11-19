@@ -80,6 +80,7 @@ function ProjectDetail() {
       addPart();
     }
   };
+  
 
   // Add a new part
   const addPart = () => {
@@ -292,9 +293,12 @@ function ProjectDetail() {
           </Table>
 
           {/* Add New Part Button */}
-          <Button variant="primary" onClick={() => setShowForm(true)}>
-            Add New Part
-          </Button>
+          <Button
+  variant="primary"
+  onClick={() => setShowForm(true)} // Show the form when clicked
+>
+  Add New Part
+</Button>
 
           {/* Modal Form for Adding/Editing a Part */}
           <ProjectPartForm

@@ -98,3 +98,68 @@ export const deleteProjectPart = (req, res) => {
         res.status(200).json({ Status: true, message: 'Project part deleted successfully' });
     });
 };
+// Adding the project part
+export const addProjectPart = (req, res) => {
+    const { part, employee, department, startDate, endDate, status, contribution } = req.body;
+    const projectId = req.params.id;  // Extract projectId from the URL
+
+    // Check if all required fields are provided
+    if (!projectId || !part || !employee || !department || !startDate || !endDate || !status || contribution === undefined) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    // Check if the project exists in the projects table
+    const checkProjectQuery = 'SELECT * FROM projects WHERE id = ?';
+    con.query(checkProjectQuery, [projectId], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+
+        // If no project is found with the provided projectId, return an error
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Project not found' });
+        }
+
+        // If the project exists, insert the new part into the project_parts table
+        const query = `INSERT INTO project_parts (project_id, part_name, employee_id, department, start_date, end_date, status, contribution_percentage)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+
+        con.query(query, [projectId, part, employee, department, startDate, endDate, status, contribution], (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+            res.status(201).json({
+                message: 'Project part added successfully',
+                partId: result.insertId // Return the id of the newly inserted part (auto-generated)
+            });
+        });
+    });
+};
+
+
+export const getProjectIds = (req, res) => {
+    const query = 'SELECT id, projectName FROM projects'; // Ensure 'id' and 'projectName' are the correct column names
+
+    // Run the query to fetch the project ids and names
+    con.query(query, (err, result) => {
+        // Log any error that occurs
+        if (err) {
+            console.error('Error executing query:', err); // Log the error
+            return res.status(500).json({ error: err.message });
+        }
+
+        // Log the result to see its structure
+        console.log('Query result:', result);
+
+        // Check if any rows are returned from the query
+        if (!result || result.length === 0) {
+            console.log('No projects found');
+            return res.status(404).json({ error: 'No projects found' });
+        }
+
+        // Send the response with both project id and name
+        res.status(200).json(result); // Send the whole result as response, which includes both 'id' and 'projectName'
+    });
+};
+
+
