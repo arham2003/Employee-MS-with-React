@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import ProgressBar from 'react-bootstrap/ProgressBar';
-import { Table, Button, Modal } from 'react-bootstrap';
-import ProjectPartForm from './ProjectPartForm'; // Import the modal form component
-import ProjectForm from './ProjectForm'; // Import the ProjectForm component
-import './ProjectDetail.css';
-import axios from 'axios'; // Axios for making API calls
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import ProgressBar from "react-bootstrap/ProgressBar";
+import { Table, Button, Modal } from "react-bootstrap";
+import ProjectPartForm from "./ProjectPartForm"; // Import the modal form component
+import ProjectForm from "./ProjectForm"; // Import the ProjectForm component
+import "./ProjectDetail.css";
+import axios from "axios"; // Axios for making API calls
 
 function ProjectDetail() {
   const { id } = useParams(); // Get the project ID from URL params
@@ -14,13 +14,13 @@ function ProjectDetail() {
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
   const [newPart, setNewPart] = useState({
-    part: '',
-    employee: '',
-    department: '',
-    startDate: '',
-    endDate: '',
-    status: '',
-    contribution: ''
+    part: "",
+    employee: "",
+    department: "",
+    startDate: "",
+    endDate: "",
+    status: "",
+    contribution: "",
   });
 
   const [showForm, setShowForm] = useState(false); // Modal state
@@ -33,38 +33,41 @@ function ProjectDetail() {
     const fetchProjectData = async () => {
       try {
         // Fetch project data
-        const response = await fetch(`http://localhost:3000/api/projects/${id}`);
+        const response = await fetch(
+          `http://localhost:3000/api/projects/${id}`
+        );
         if (!response.ok) {
-          throw new Error('Failed to fetch project data');
+          throw new Error("Failed to fetch project data");
         }
         const projectData = await response.json();
         setProject(projectData); // Store project data
-  
+
         // Fetch project parts data
-        const partsResponse = await fetch(`http://localhost:3000/project_parts/${id}`);
+        const partsResponse = await fetch(
+          `http://localhost:3000/project_parts/${id}`
+        );
         if (!partsResponse.ok) {
-          throw new Error('Failed to fetch project parts data');
+          throw new Error("Failed to fetch project parts data");
         }
         const partsData = await partsResponse.json();
         setProjectParts(partsData); // Store project parts data
       } catch (err) {
-        console.error('Error fetching project data:', err);
-        setError('Error fetching project data'); // Optional: display error to user
+        console.error("Error fetching project data:", err);
+        setError("Error fetching project data"); // Optional: display error to user
       } finally {
         setLoading(false); // Optional: set loading state to false after data is fetched
       }
     };
-  
+
     fetchProjectData();
   }, [id]);
-  
-  
+
   // Handle change for adding/editing a part
   const handlePartChange = (e) => {
     const { name, value } = e.target;
     setNewPart((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -103,21 +106,31 @@ function ProjectDetail() {
   };
 
   // Remove a part
-  const removePart = (index) => {
-    const updatedParts = projectParts.filter((_, i) => i !== index);
-    setProjectParts(updatedParts);
+  const handleDelete = (id) => {
+    axios
+      .delete(`http://localhost:3000/api/project_parts/${id}`)
+      .then((result) => {
+        if (result.data.Status) {
+          window.location.reload(); // Optionally reload the page to reflect the changes
+        } else {
+          alert(result.data.Error); // Display any error from the response
+        }
+      })
+      .catch((err) => console.log(err)); // Catch any errors
   };
+  
+
 
   // Function to reset the form
   const resetForm = () => {
     setNewPart({
-      part: '',
-      employee: '',
-      department: '',
-      startDate: '',
-      endDate: '',
-      status: '',
-      contribution: ''
+      part: "",
+      employee: "",
+      department: "",
+      startDate: "",
+      endDate: "",
+      status: "",
+      contribution: "",
     });
     setIsEditing(false); // Reset editing state
     setShowForm(false); // Hide the form modal
@@ -141,31 +154,36 @@ function ProjectDetail() {
     return <div>{error}</div>;
   }
 
- 
-
   // Function to format the date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
 
     const options = {
-      timeZone: 'Asia/Karachi', // Specify the timezone as Karachi (Pakistan Standard Time)
-    weekday: 'short',         // "Sat"
-    day: 'numeric',           // "30"
-    month: 'short',           // "Nov"
-    year: 'numeric',           // "30"
+      timeZone: "Asia/Karachi", // Specify the timezone as Karachi (Pakistan Standard Time)
+      weekday: "short", // "Sat"
+      day: "numeric", // "30"
+      month: "short", // "Nov"
+      year: "numeric", // "30"
       // hour: '2-digit',          // "07"
       // minute: '2-digit',        // "00"
       // hour12: true,             // Use 12-hour time
     };
 
-    return date.toLocaleString('en-US', options); // Format and return the date
+    return date.toLocaleString("en-US", options); // Format and return the date
   };
 
   return (
-    <div className="project-detail-container" style={{ padding: '20px', textAlign: 'center' }}>
+    <div
+      className="project-detail-container"
+      style={{ padding: "20px", textAlign: "center" }}
+    >
       {project ? (
         <div className="project-details">
-          <Button variant="primary" onClick={toggleProjectForm} style={{ marginBottom: '20px' }}>
+          <Button
+            variant="primary"
+            onClick={toggleProjectForm}
+            style={{ marginBottom: "20px" }}
+          >
             Edit Project Details
           </Button>
 
@@ -188,30 +206,44 @@ function ProjectDetail() {
           </Modal>
 
           <h3>{project.projectName}</h3>
-          <ProgressBar now={project.progress} label={`${project.progress}%`} style={{ marginBottom: '20px' }} />
+          <ProgressBar
+            now={project.progress}
+            label={`${project.progress}%`}
+            style={{ marginBottom: "20px" }}
+          />
 
           {/* Project Details Table */}
           <h5>Project Details</h5>
-          <Table striped bordered hover style={{ marginBottom: '40px' }}>
+          <Table striped bordered hover style={{ marginBottom: "40px" }}>
             <tbody>
               <tr>
-                <td><strong>Customer:</strong></td>
+                <td>
+                  <strong>Customer:</strong>
+                </td>
                 <td>{project.customerName}</td>
               </tr>
               <tr>
-                <td><strong>Start Date:</strong></td>
+                <td>
+                  <strong>Start Date:</strong>
+                </td>
                 <td>{formatDate(project.startDate)}</td>
               </tr>
               <tr>
-                <td><strong>End Date:</strong></td>
+                <td>
+                  <strong>End Date:</strong>
+                </td>
                 <td>{formatDate(project.expectedDate)}</td>
               </tr>
               <tr>
-                <td><strong>Budget:</strong></td>
+                <td>
+                  <strong>Budget:</strong>
+                </td>
                 <td>${project.budget.toLocaleString()}</td>
               </tr>
               <tr>
-                <td><strong>Status:</strong></td>
+                <td>
+                  <strong>Status:</strong>
+                </td>
                 <td>{project.status}</td>
               </tr>
             </tbody>
@@ -233,32 +265,42 @@ function ProjectDetail() {
               </tr>
             </thead>
             <tbody>
-              {projectParts.map((part, index) => (
-                <tr key={index}>
-                  <td>{part.part_name}</td>
-                  <td>{part.employee}</td>
-                  <td>{part.department}</td>
-                  <td>{formatDate(part.start_date)}</td> {/* Display formatted start date */}
-              <td>{formatDate(part.end_date)}</td>
-                  <td>{part.status}</td>
-                  <td>{part.contribution_percentage}</td>
-                  <td>
-                    <Button variant="info" onClick={() => editPart(part)}>Edit</Button>{' '}
-                    <Button variant="danger" onClick={() => removePart(index)}>Delete</Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+  {projectParts.map((part, index) => (
+    <tr key={index}>
+      <td>{part.part_name}</td>
+      <td>{part.part_id}</td>
+      <td>{part.department}</td>
+      <td>{formatDate(part.start_date)}</td>
+      <td>{formatDate(part.end_date)}</td>
+      <td>{part.status}</td>
+      <td>{part.contribution_percentage}</td>
+      <td>
+        <Button variant="info" onClick={() => editPart(part)}>
+          Edit
+        </Button>{" "}
+        <Button
+          variant="danger"
+          onClick={() => handleDelete(part.part_id)} // Pass the part_id directly
+        >
+          Delete
+        </Button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+            
           </Table>
 
           {/* Add New Part Button */}
-          <Button variant="primary" onClick={() => setShowForm(true)}>Add New Part</Button>
+          <Button variant="primary" onClick={() => setShowForm(true)}>
+            Add New Part
+          </Button>
 
           {/* Modal Form for Adding/Editing a Part */}
           <ProjectPartForm
             newPart={newPart}
             handlePartChange={handlePartChange}
-            handleFormSubmit={handleFormSubmit} 
+            handleFormSubmit={handleFormSubmit}
             isEditing={isEditing}
             show={showForm}
             handleClose={resetForm}

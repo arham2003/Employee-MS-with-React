@@ -80,3 +80,21 @@ export const getProjectById = (req, res) => {
         res.status(200).json(result[0]); // Return the project details
     });
 };
+
+// Delete Project Part
+export const deleteProjectPart = (req, res) => {
+    const { partId } = req.params; // Extract the partId from the request parameters
+
+    // Ensure 'id' is the actual column name in your table, otherwise replace it with the correct one.
+    const query = 'DELETE FROM project_parts WHERE part_id = ?'; // Use 'part_id' as column name
+
+    con.query(query, [partId], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Project part not found' });
+        }
+        res.status(200).json({ Status: true, message: 'Project part deleted successfully' });
+    });
+};
