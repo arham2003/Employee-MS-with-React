@@ -72,12 +72,11 @@ export const getProjectById = (req, res) => {
     const query = 'SELECT * FROM projects WHERE id = ?';
     con.query(query, [id], (err, result) => {
         if (err) {
-            console.error('Database error:', err);  // Log the error
             return res.status(500).json({ error: err.message });
         }
         if (result.length === 0) {
             return res.status(404).json({ error: 'Project not found' });
         }
-        res.status(200).json(result[0]);
+        res.status(200).json(result[0]); // Return the project details
     });
 };
