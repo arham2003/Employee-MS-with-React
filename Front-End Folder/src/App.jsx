@@ -18,6 +18,7 @@ import PrivateRoute from './Components/PrivateRoute'
 import Projects from './Components/projects/project'  // Projects List
 import ProjectForm from './Components/projects/ProjectForm'  // Add Project Form
 import ProjectDetail from './Components/projects/ProjectDetail'  // Project Details Page
+import ProjectPhaseForm from './Components/projects/ProjectPhaseForm'
 
 function App() {
   return (
@@ -40,6 +41,8 @@ function App() {
           
           {/* List of Projects */}
           <Route path="/dashboard/projects" element={<Projects />}></Route>
+          <Route path="/dashboard/project_phase" element={<ProjectPhaseForm />}></Route>
+
           
           {/* Add New Project Form */}
           <Route path="/dashboard/projectForm" element={<ProjectForm />}></Route>

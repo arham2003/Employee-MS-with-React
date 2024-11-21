@@ -24,6 +24,7 @@ function ProjectPartForm({ newPart, handlePartChange, handleFormSubmit, isEditin
   const submitForm = async (e) => {
     e.preventDefault();
   
+    console.log(newPart)
     try {
       if (isEditing) {
         // Update part logic (if required)

@@ -29,6 +29,9 @@ function Projects() {
         <Link to="/dashboard/projectForm" className="btn btn-success">
           Add Project
         </Link>
+        <Link to="/dashboard/project_phase" className="btn btn-success">
+          Add Phase
+        </Link>
 
         <div className="projects-list row row-cols-md-3">
           {projects.map((project) => (
