@@ -14,7 +14,7 @@ function ProjectDetail() {
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
   const [newPart, setNewPart] = useState({
-    part: "",
+    part_name: "",
     employee: "",
     department: "",
     startDate: "",
@@ -89,9 +89,17 @@ function ProjectDetail() {
     resetForm(); // Reset the form and hide it
   };
 
-  // Edit a part
   const editPart = (part) => {
-    setNewPart(part); // Set the selected part to the form fields for editing
+    setNewPart({
+      part_id: part.part_id,  // Ensure part_id is included in the part state
+      part_name: part.part_name,
+      employee: part.employee,
+      department: part.department,
+      startDate: part.start_date,
+      endDate: part.end_date,
+      status: part.status,
+      contribution: part.contribution_percentage
+    });
     setShowForm(true); // Show the form for editing
     setIsEditing(true); // Mark that we are editing
   };
@@ -302,13 +310,14 @@ function ProjectDetail() {
 
           {/* Modal Form for Adding/Editing a Part */}
           <ProjectPartForm
-            newPart={newPart}
-            handlePartChange={handlePartChange}
-            handleFormSubmit={handleFormSubmit}
-            isEditing={isEditing}
-            show={showForm}
-            handleClose={resetForm}
-          />
+  newPart={newPart}  // Now contains part_id
+  handlePartChange={handlePartChange}
+  handleFormSubmit={handleFormSubmit}
+  isEditing={isEditing}
+  show={showForm}
+  handleClose={resetForm}
+  projectId={id}  // Pass projectId for reference
+/>
         </div>
       ) : (
         <p>Project not found</p>

@@ -66,6 +66,71 @@ export const getProjectPartsByProjectId = (req, res) => {
     });
 };
 
+// Function to get a project part by partId
+export const getProjectPartById = (req, res) => {
+    const { partId } = req.params; // Get partId from URL params
+
+    // Ensure partId is provided and is a valid number
+    if (!partId || isNaN(partId)) {
+        return res.status(400).json({ error: 'Invalid or missing partId' });
+    }
+
+    const query = 'SELECT * FROM project_parts WHERE part_id = ?';
+    con.query(query, [partId], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'No part found with this ID' });
+        }
+        res.status(200).json(results[0]); // Return only the first result since partId should be unique
+    });
+};
+
+// Function to update a project part by partId
+// Function to update a project part by partId
+export const updateProjectPartById = (req, res) => {
+    const { partId } = req.params; // Get partId from URL params
+    const { part_name, employee_id, department, start_date, end_date, status, contribution_percentage, project_id } = req.body; // Get the data from the request body
+
+    // Ensure partId is provided and is a valid number
+    if (!partId || isNaN(partId)) {
+        return res.status(400).json({ error: 'Invalid or missing partId' });
+    }
+
+    // Ensure required fields are provided in the request body
+    if (!part_name || !employee_id || !department || !start_date || !end_date || !status || !contribution_percentage || !project_id) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // SQL query to update the project part
+    const query = `
+        UPDATE project_parts
+        SET
+            part_name = ?, 
+            employee_id = ?, 
+            department = ?, 
+            start_date = ?, 
+            end_date = ?, 
+            status = ?, 
+            contribution_percentage = ?, 
+            project_id = ?
+        WHERE part_id = ?`;
+
+    // Execute the query with the provided data
+    con.query(query, [part_name, employee_id, department, start_date, end_date, status, contribution_percentage, project_id, partId], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ error: 'No part found with this ID to update' });
+        }
+        res.status(200).json({ message: 'Project part updated successfully' });
+    });
+};
+
+
+
 export const getProjectById = (req, res) => {
     const { id } = req.params;
 
