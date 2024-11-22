@@ -74,7 +74,7 @@ export const addDepartment = (req, res) => {
 export const deleteDepartment = (req, res) => {
     const { departmentId } = req.params; // Get department ID from URL parameters
 
-    // Log the department ID to make sure it's passed correctly
+    // Log the department ID to ensure it's passed correctly
     console.log("Deleting department with ID:", departmentId);
 
     // SQL query to delete the department by ID
@@ -83,7 +83,18 @@ export const deleteDepartment = (req, res) => {
     // Execute the query
     con.query(sql, [departmentId], (err, result) => {
         if (err) {
-            return res.status(500).json({ Error: "Query Error: " + err });
+            // Check for foreign key constraint violation (MySQL error code for this is ER_ROW_IS_REFERENCED_2)
+            if (err.code === 'ER_ROW_IS_REFERENCED_2') {
+                return res.status(400).json({
+                    Status: false,
+                    Error: "Foreign key constraint violation: This department has associated employees. Please remove all employees first."
+                });
+            }
+
+            // For other errors, return a generic query error
+            return res.status(500).json({
+                Error: "Query Error: " + err
+            });
         }
 
         console.log(result); // Log the result of the query
@@ -103,6 +114,7 @@ export const deleteDepartment = (req, res) => {
         });
     });
 };
+
 
 export const updateDepartment = (req, res) => {
     const departmentId = req.params.id; // Get department ID from URL parameters

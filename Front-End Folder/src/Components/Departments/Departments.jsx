@@ -2,6 +2,28 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AddDepartment from './AddDepartmentForm';
 
+const handleDeleteClick = (departmentId) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this department?');
+    if (confirmDelete) {
+        axios.delete(`http://localhost:3000/delete_department/${departmentId}`)
+            .then(() => {
+                setDepartments(departments.filter(department => department.department_id !== departmentId));
+                alert('Department deleted successfully!');
+            })
+            .catch((error) => {
+                console.error('Error deleting department:', error);
+                
+                // Check for foreign key constraint error
+                if (error.response && error.response.data && error.response.data.Error.includes('foreign key constraint')) {
+                    alert('Cannot delete this department because it has associated employees. Please remove all employees first.');
+                } else {
+                    alert('An error occurred while deleting the department. Please try again.');
+                }
+            });
+    }
+};
+
+
 const Departments = () => {
     const [showAddForm, setShowAddForm] = useState(false);
     const [departments, setDepartments] = useState([]);
@@ -29,6 +51,8 @@ const Departments = () => {
                 console.error('Error fetching employees:', error);
             });
     }, []);
+
+    
 
     // Toggle Add Department form visibility
     const handleAddClick = () => {

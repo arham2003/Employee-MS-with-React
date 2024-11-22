@@ -26,21 +26,18 @@ router.post("/adminlogin", (req, res) => {
   });
 });
 
-router.get('/category', (req, res) => {
-    const sql = "SELECT * FROM category";
+router.get('/departments', (req, res) => {
+    const sql = "SELECT * FROM departments";
     con.query(sql, (err, result) => {
-        if(err) return res.json({Status: false, Error: "Query Error"})
-        return res.json({Status: true, Result: result})
-    })
-})
+        if (err) {
+            console.error("Query Error:", err);
+            return res.json({ Status: false, Error: "Query Error" });
+        }
+        console.log("Departments fetched:", result);
+        return res.json({ Status: true, Result: result });
+    });
+}); 
 
-router.post('/add_category', (req, res) => {
-    const sql = "INSERT INTO category (`name`) VALUES (?)"
-    con.query(sql, [req.body.category], (err, result) => {
-        if(err) return res.json({Status: false, Error: "Query Error"})
-        return res.json({Status: true})
-    })
-})
 
 router.post('/add_category', (req, res) => {
     console.log("Add Category API Hit");  // Log to verify if the API is being called
@@ -74,6 +71,9 @@ router.post('/add_employee',upload.single('image'), (req, res) => {
     VALUES (?)`;
     bcrypt.hash(req.body.password, 10, (err, hash) => {
         if(err) return res.json({Status: false, Error: "Query Error"})
+
+        const categoryId = req.body.category_id || null;
+
         const values = [
             req.body.name,
             req.body.email,
@@ -81,7 +81,7 @@ router.post('/add_employee',upload.single('image'), (req, res) => {
             req.body.address,
             req.body.salary, 
             req.file.filename,
-            req.body.category_id
+            categoryId  
         ]
         con.query(sql, [values], (err, result) => {
             if(err) return res.json({Status: false, Error: err})
@@ -101,9 +101,10 @@ router.post('/add_employee',upload.single('image'), (req, res) => {
 
 router.get('/employee', (req, res) => {
     const sql = `
-    SELECT e.id, e.name, e.email, e.address, e.salary, e.image, c.name as category_name 
-    FROM employee e
-    JOIN category c ON e.category_id = c.id
+    SELECT e.id, e.name, e.email, e.address, e.salary, e.image, 
+    IFNULL(d.department_name, '') as category_name 
+    FROM employee e 
+    LEFT JOIN departments d ON e.category_id = d.department_id
     `;
     con.query(sql, (err, result) => {
         if(err) return res.json({ Status: false, Error: "Query Error: " + err });
@@ -111,14 +112,23 @@ router.get('/employee', (req, res) => {
     });
 });
 
+
 router.get('/employee/:id', (req, res) => {
-    const id = req.params.id;
-    const sql = "SELECT * FROM employee WHERE id = ?";
-    con.query(sql,[id], (err, result) => {
-        if(err) return res.json({Status: false, Error: "Query Error"})
-        return res.json({Status: true, Result: result})
-    })
-})
+    const sql = `
+    SELECT e.id, e.name, e.email, e.address, e.salary, e.image, e.category_id, 
+           IFNULL(d.department_name, '') AS category_name
+    FROM employee e
+    LEFT JOIN departments d ON e.category_id = d.department_id
+    WHERE e.id = ?`;
+    con.query(sql, [req.params.id], (err, result) => {
+        if (err) return res.json({ Status: false, Error: "Query Error: " + err });
+        if (result.length > 0) {
+            return res.json({ Status: true, Result: result });
+        } else {
+            return res.json({ Status: false, Error: "Employee not found" });
+        }
+    });
+});
 
 router.put('/edit_employee/:id', (req, res) => {
     const id = req.params.id;
