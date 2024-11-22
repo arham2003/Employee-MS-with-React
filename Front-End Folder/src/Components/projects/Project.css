@@ -1,5 +1,7 @@
 .projects-container {
   padding: 20px;
+  max-width: 100%; /* Use full width of the container */
+  margin: 0 auto; /* Center align the container */
 }
 
 .header-container h3 {
@@ -11,6 +13,9 @@
 
 .projects-list {
   margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two columns per row */
+  gap: 1rem; /* Spacing between cards */
 }
 
 .card {

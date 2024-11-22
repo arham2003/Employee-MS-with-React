@@ -40,8 +40,8 @@ const Employee = () => {
       <Link to="/dashboard/add_employee" className="btn btn-success">
         Add Employee
       </Link>
-      <div className="mt-3">
-        <table className="table">
+      <div className="mt-3 py-2">
+        <table className="table py-3">
           <thead>
             <tr>
               <th>Name</th>
@@ -49,7 +49,7 @@ const Employee = () => {
               <th>Email</th>
               <th>Address</th>
               <th>Salary</th>
-              <th>Category</th> {/* Added Category column */}
+              <th>Department</th> {/* Added Category column */}
               <th>Action</th>
             </tr>
           </thead>
