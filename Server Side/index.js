@@ -5,6 +5,7 @@ import { EmployeeRouter } from "./Routes/EmployeeRoute.js";
 import Jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 import { getAllProjects , addProject, getAllProjectParts, getProjectPartsByProjectId, getProjectById, deleteProjectPart, addProjectPart, getProjectIds, getProjectPartById, updateProjectPartById} from "./Routes/projects/projectController.js";
+import { addCustomer,  deleteCustomerById, editCustomer, getAllCustomers } from "./Routes/customer/customer.js";
 
 const app = express() 
 app.use(cors({
@@ -44,6 +45,12 @@ app.post('/add_projectpart/:id',addProjectPart)
 app.get('/get_projectpart/:partId',getProjectPartById)
 app.put('/update_projectpart/:partId',updateProjectPartById)
 app.get('/get_project_ids',getProjectIds)
+
+// Customer APIS
+app.get('/get_allCustomers',getAllCustomers)
+app.post('/add_customer',addCustomer)
+app.delete('/delete_customer/:customerId',deleteCustomerById)
+app.put('/edit_customer/:customerId',editCustomer)
 
 app.get('/verify',verifyUser, (req, res)=> {
     return res.json({Status: true, role: req.role, id: req.id})

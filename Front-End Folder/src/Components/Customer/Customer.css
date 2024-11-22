@@ -1,0 +1,20 @@
+.table {
+    width: 100%; /* Ensure the table takes full width of the container */
+    table-layout: auto; /* Let the table adjust to fit content */
+  }
+  
+  .table th, .table td {
+    padding: 12px; /* Adjust padding for readability */
+    font-size: 16px; /* Adjust font size */
+  }
+  
+  .table-responsive {
+    max-height: calc(100vh - 150px); /* Table takes the available height of the screen minus some padding for UI elements */
+    overflow-y: auto; /* Vertical scrolling */
+    overflow-x: auto; /* Horizontal scrolling */
+  }
+  
+  .table th {
+    white-space: nowrap; /* Prevent wrapping of table header content */
+  }
+  

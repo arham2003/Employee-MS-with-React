@@ -25,7 +25,7 @@ const Dashboard = () => {
               className="d-flex align-items-center pb-3 mb-md-1 mt-md-3 me-md-auto text-white text-decoration-none"
             >
               <span className="fs-5 fw-bolder d-none d-sm-inline">
-                Code With Yousof
+                Code With PK
               </span>
             </Link>
             <ul
@@ -49,6 +49,17 @@ const Dashboard = () => {
                   <i className="fs-4 bi-people ms-2"></i>
                   <span className="ms-2 d-none d-sm-inline">
                     Manage Employees
+                  </span>
+                </Link>
+              </li>
+              <li className="w-100">
+                <Link
+                  to="/dashboard/customer"
+                  className="nav-link px-0 align-middle text-white"
+                >
+                  <i className="fs-4 bi-people ms-2"></i>
+                  <span className="ms-2 d-none d-sm-inline">
+                    Manage Customers
                   </span>
                 </Link>
               </li>
