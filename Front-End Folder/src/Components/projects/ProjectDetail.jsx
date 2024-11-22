@@ -263,9 +263,9 @@ function ProjectDetail() {
           <Table striped bordered hover>
             <thead>
               <tr>
-                <th>Part</th>
+                <th>Phase</th>
                 <th>Employee</th>
-                <th>Department</th>
+                {/* <th>Department</th> */}
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th>Status</th>
@@ -278,7 +278,7 @@ function ProjectDetail() {
     <tr key={index}>
       <td>{part.part_name}</td>
       <td>{part.part_id}</td>
-      <td>{part.department}</td>
+      {/* <td>{part.department}</td> */}
       <td>{formatDate(part.start_date)}</td>
       <td>{formatDate(part.end_date)}</td>
       <td>{part.status}</td>
