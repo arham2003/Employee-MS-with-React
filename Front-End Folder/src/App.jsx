@@ -20,8 +20,9 @@ import ProjectForm from './Components/projects/ProjectForm'  // Add Project Form
 import ProjectDetail from './Components/projects/ProjectDetail'  // Project Details Page
 import ProjectPhaseForm from './Components/projects/ProjectPhaseForm'
 import Attendance from './Components/Attendance/Attendance'
-import CustomerDetailForm from './Components/Customer/CustomerDetailsForm'
+// import CustomerDetailForm from './Components/Customer/CustomerDetailsForm'
 import Customer from './Components/Customer/Customer'
+import Departments from './Components/Departments/Departments'
 
 function App() {
   return (
@@ -41,7 +42,7 @@ function App() {
           <Route path="/dashboard/employee" element={<Employee />}></Route>
           <Route path="/dashboard/customer" element={<Customer />}></Route>
 
-          <Route path="/dashboard/category" element={<Category />}></Route>
+          <Route path="/dashboard/departments" element={<Departments />}></Route>
           <Route path="/dashboard/attendance" element={< Attendance/>}></Route>
 
           <Route path="/dashboard/profile" element={<Profile />}></Route>

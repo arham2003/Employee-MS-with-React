@@ -94,7 +94,7 @@ const handleFormSubmit = (newCustomer) => {
       )}
 
       {/* Display customer table */}
-      <h2>Customer List</h2>
+      <h2>Customer Details</h2>
       <div className="table-responsive" style={{ maxHeight: 'calc(100vh - 150px)', overflowY: 'auto', overflowX: 'auto' }}>
         <table className="table table-striped table-bordered" style={{ width: '100%', tableLayout: 'auto' }}>
           <thead>

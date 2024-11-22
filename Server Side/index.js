@@ -6,6 +6,7 @@ import Jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 import { getAllProjects , addProject, getAllProjectParts, getProjectPartsByProjectId, getProjectById, deleteProjectPart, addProjectPart, getProjectIds, getProjectPartById, updateProjectPartById} from "./Routes/projects/projectController.js";
 import { addCustomer,  deleteCustomerById, editCustomer, getAllCustomers } from "./Routes/customer/customer.js";
+import { addDepartment, deleteDepartment, getAllDepartments, getAllEmployees, updateDepartment } from "./Routes/departments/departments.js";
 
 const app = express() 
 app.use(cors({
@@ -51,6 +52,13 @@ app.get('/get_allCustomers',getAllCustomers)
 app.post('/add_customer',addCustomer)
 app.delete('/delete_customer/:customerId',deleteCustomerById)
 app.put('/edit_customer/:customerId',editCustomer)
+
+// Departments APIS
+app.get('/get_all_employees',getAllEmployees)
+app.get('/get_all_departments',getAllDepartments)
+app.post('/add_department',addDepartment)
+app.delete('/delete_department/:departmentId', deleteDepartment);
+app.put('/update_department/:id',updateDepartment)
 
 app.get('/verify',verifyUser, (req, res)=> {
     return res.json({Status: true, role: req.role, id: req.id})
