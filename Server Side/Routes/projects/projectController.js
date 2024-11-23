@@ -12,26 +12,27 @@ export const getAllProjects = (req, res) => {
 };
 
 export const addProject = (req, res) => {
-    const { customerId, startDate, expectedDate, budget, status } = req.body;
-
-    // Check if all required fields are provided
-    if (!customerId || !startDate || !expectedDate || !budget || !status) {
-        return res.status(400).json({ error: 'All fields are required' });
+    console.log(req.body); // Log the body to check the received data
+  
+    const { projectName, customerId, startDate, expectedDate, budget, status } = req.body;
+  
+    if (!projectName || !customerId || !startDate || !expectedDate || !budget || !status) {
+      return res.status(400).json({ error: 'All fields are required' });
     }
-
-    // Modified query: Removed 'projectName' as it doesn't exist in the table
-    const query = 'INSERT INTO projects (customer_id, startDate, expectedDate, budget, status) VALUES (?, ?, ?, ?, ?)';
+  
+    const query = 'INSERT INTO projects (projectName, customer_id, startDate, expectedDate, budget, status) VALUES (?, ?, ?, ?, ?, ?)';
     
-    con.query(query, [customerId, startDate, expectedDate, budget, status], (err, result) => {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
-        res.status(201).json({
-            message: 'Project added successfully',
-            projectId: result.insertId // Return the id of the newly inserted project
-        });
+    con.query(query, [projectName, customerId, startDate, expectedDate, budget, status], (err, result) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      res.status(201).json({
+        message: 'Project added successfully',
+        projectId: result.insertId
+      });
     });
-};
+  };
+  
 
 
 

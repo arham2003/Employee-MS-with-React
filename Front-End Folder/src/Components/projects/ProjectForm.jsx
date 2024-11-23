@@ -18,11 +18,14 @@ const ProjectForm = () => {
     fetch('http://localhost:3000/get_allCustomers')
       .then((response) => response.json())
       .then((data) => {
+        console.log('Customers fetched:', data);
         if (data.Status) {
           setCustomers(data.Result); // Store the customers if API call is successful
         }
       })
-      .catch((error) => console.error('Error fetching customers:', error));
+      .catch((error) => {
+        console.error('Error fetching customers:', error);
+      });
   }, []);
 
   // Handle change for form fields
@@ -34,8 +37,10 @@ const ProjectForm = () => {
     }));
   };
 
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log('Form Data Submitted:', formData);  // Debugging step
 
     // Send a POST request with the form data
     fetch('http://localhost:3000/projects/add', {
@@ -47,19 +52,23 @@ const ProjectForm = () => {
     })
     .then((response) => response.json())
     .then((data) => {
-      console.log('Success:', data);
+      console.log('Response from server:', data);  // Debugging step
       // Optionally, reset the form or notify the user of success
-      setFormData({
-        projectName: '',
-        customerId: '', // Reset the customer_id field
-        startDate: '',
-        expectedDate: '',
-        budget: '',
-        status: '',
-      });
+      if (data.Status === 'Success') {
+        setFormData({
+          projectName: '',
+          customerId: '',
+          startDate: '',
+          expectedDate: '',
+          budget: '',
+          status: '',
+        });
+      } else {
+        console.error('Failed to submit:', data);
+      }
     })
     .catch((error) => {
-      console.error('Error:', error);
+      console.error('Error during submission:', error);
     });
   };
 
@@ -82,9 +91,9 @@ const ProjectForm = () => {
         <div className="form-group">
           <label htmlFor="customerId">Customer Name:</label>
           <select
-            id="customerId"  // This corresponds to customerId now
-            name="customerId" // This will store the customer_id
-            value={formData.customerId} // Store the id in formData
+            id="customerId"  
+            name="customerId" 
+            value={formData.customerId} 
             onChange={handleChange}
             required
           >

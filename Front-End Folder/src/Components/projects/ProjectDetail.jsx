@@ -6,6 +6,7 @@ import ProjectPartForm from "./ProjectPartForm"; // Import the modal form compon
 import ProjectForm from "./ProjectForm"; // Import the ProjectForm component
 import "./ProjectDetail.css";
 import axios from "axios"; // Axios for making API calls
+import ProjectPhase from "./ProjectPhase"; // Import the ProjectPhase component
 
 function ProjectDetail() {
   const { id } = useParams(); // Get the project ID from URL params
@@ -14,6 +15,7 @@ function ProjectDetail() {
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
   const [newPart, setNewPart] = useState({
+    part_id: "", // Ensure part_id is included in the state
     part_name: "",
     employee: "",
     department: "",
@@ -23,13 +25,12 @@ function ProjectDetail() {
     contribution: "",
   });
 
-  const [showForm, setShowForm] = useState(false); // Modal state
+  const [showForm, setShowForm] = useState(false); // Modal state for adding/editing part
   const [isEditing, setIsEditing] = useState(false); // State to track if we are editing a part
   const [showProjectModal, setShowProjectModal] = useState(false); // Modal for editing project details
 
   // Fetch project details and parts from the backend
   useEffect(() => {
-    console.log(id);
     const fetchProjectData = async () => {
       try {
         // Fetch project data
@@ -80,7 +81,6 @@ function ProjectDetail() {
       addPart();
     }
   };
-  
 
   // Add a new part
   const addPart = () => {
@@ -91,14 +91,14 @@ function ProjectDetail() {
 
   const editPart = (part) => {
     setNewPart({
-      part_id: part.part_id,  // Ensure part_id is included in the part state
+      part_id: part.part_id, // Ensure part_id is included in the part state
       part_name: part.part_name,
       employee: part.employee,
       department: part.department,
       startDate: part.start_date,
       endDate: part.end_date,
       status: part.status,
-      contribution: part.contribution_percentage
+      contribution: part.contribution_percentage,
     });
     setShowForm(true); // Show the form for editing
     setIsEditing(true); // Mark that we are editing
@@ -108,7 +108,7 @@ function ProjectDetail() {
   const updatePart = () => {
     // Here you would also update it in the backend via an API
     const updatedParts = projectParts.map((part) =>
-      part.part === newPart.part ? newPart : part
+      part.part_id === newPart.part_id ? newPart : part
     );
     setProjectParts(updatedParts);
     resetForm(); // Reset the form and hide it
@@ -127,13 +127,12 @@ function ProjectDetail() {
       })
       .catch((err) => console.log(err)); // Catch any errors
   };
-  
-
 
   // Function to reset the form
   const resetForm = () => {
     setNewPart({
-      part: "",
+      part_id: "",
+      part_name: "",
       employee: "",
       department: "",
       startDate: "",
@@ -166,16 +165,12 @@ function ProjectDetail() {
   // Function to format the date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-
     const options = {
       timeZone: "Asia/Karachi", // Specify the timezone as Karachi (Pakistan Standard Time)
       weekday: "short", // "Sat"
       day: "numeric", // "30"
       month: "short", // "Nov"
       year: "numeric", // "30"
-      // hour: '2-digit',          // "07"
-      // minute: '2-digit',        // "00"
-      // hour12: true,             // Use 12-hour time
     };
 
     return date.toLocaleString("en-US", options); // Format and return the date
@@ -258,66 +253,14 @@ function ProjectDetail() {
             </tbody>
           </Table>
 
-          {/* Project Parts Table */}
-          <h5>Project Parts</h5>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>Phase</th>
-                <th>Employee</th>
-                {/* <th>Department</th> */}
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Status</th>
-                <th>Contribution (%)</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-  {projectParts.map((part, index) => (
-    <tr key={index}>
-      <td>{part.part_name}</td>
-      <td>{part.part_id}</td>
-      {/* <td>{part.department}</td> */}
-      <td>{formatDate(part.start_date)}</td>
-      <td>{formatDate(part.end_date)}</td>
-      <td>{part.status}</td>
-      <td>{part.contribution_percentage}</td>
-      <td>
-        <Button variant="info" onClick={() => editPart(part)}>
-          Edit
-        </Button>{" "}
-        <Button
-          variant="danger"
-          onClick={() => handleDelete(part.part_id)} // Pass the part_id directly
-        >
-          Delete
-        </Button>
-      </td>
-    </tr>
-  ))}
-</tbody>
-            
-          </Table>
-
-          {/* Add New Part Button */}
-          <Button
-  variant="primary"
-  onClick={() => setShowForm(true)} // Show the form when clicked
->
-  Add New Part
-</Button>
-
+          <ProjectPhase
+            projectParts={projectParts}  // Pass the correct data
+            editPart={editPart}  // Pass the correct edit handler
+            handleDelete={handleDelete}  // Pass the correct delete handler
+          />
+          
           {/* Modal Form for Adding/Editing a Part */}
-          <ProjectPartForm
-  newPart={newPart}  // Now contains part_id
-  handlePartChange={handlePartChange}
-  handleFormSubmit={handleFormSubmit}
-  isEditing={isEditing}
-  show={showForm}
-  handleClose={resetForm}
-  projectId={id}  // Pass projectId for reference
-/>
+
         </div>
       ) : (
         <p>Project not found</p>
@@ -327,3 +270,7 @@ function ProjectDetail() {
 }
 
 export default ProjectDetail;
+
+
+
+
