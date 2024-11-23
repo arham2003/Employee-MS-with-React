@@ -46,6 +46,7 @@ const Employee = () => {
             <tr>
               <th>Name</th>
               <th>Image</th>
+              <th>Post</th>
               <th>Email</th>
               <th>Address</th>
               <th>Salary</th>
@@ -57,6 +58,8 @@ const Employee = () => {
             {employee.map((e) => (
               <tr key={e.id}>
                 <td>{e.name}</td>
+                
+
                 <td>
                   <img
                     src={`http://localhost:3000/Images/` + e.image}
@@ -64,6 +67,8 @@ const Employee = () => {
                     alt="Employee"
                   />
                 </td>
+                <td>{e.post}</td>
+
                 <td>{e.email}</td>
                 <td>{e.address}</td>
                 <td>{e.salary}</td>

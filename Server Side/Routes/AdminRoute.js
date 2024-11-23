@@ -65,30 +65,35 @@ const upload = multer({
 })
 // end imag eupload 
 
-router.post('/add_employee',upload.single('image'), (req, res) => {
+router.post('/add_employee', upload.single('image'), (req, res) => {
     const sql = `INSERT INTO employee 
-    (name,email,password, address, salary,image, category_id) 
+    (name, email, password, address, salary, image, department_id, post) 
     VALUES (?)`;
-    bcrypt.hash(req.body.password, 10, (err, hash) => {
-        if(err) return res.json({Status: false, Error: "Query Error"})
 
-        const categoryId = req.body.category_id || null;
+    bcrypt.hash(req.body.password, 10, (err, hash) => {
+        if (err) return res.json({ Status: false, Error: "Hashing Error" });
+
+        const categoryId = req.body.department_id || null;
+        const post = req.body.post || ''; // Default to an empty string if no post is provided
 
         const values = [
             req.body.name,
             req.body.email,
             hash,
             req.body.address,
-            req.body.salary, 
+            req.body.salary,
             req.file.filename,
-            categoryId  
-        ]
+            categoryId,
+            post  // Adding post to the values array
+        ];
+
         con.query(sql, [values], (err, result) => {
-            if(err) return res.json({Status: false, Error: err})
-            return res.json({Status: true})
-        })
-    })
-})
+            if (err) return res.json({ Status: false, Error: err });
+            return res.json({ Status: true });
+        });
+    });
+});
+
 
 // router.get('/employee', (req, res) => {
 //     const sql = "SELECT * FROM employee";
@@ -102,9 +107,9 @@ router.post('/add_employee',upload.single('image'), (req, res) => {
 router.get('/employee', (req, res) => {
     const sql = `
     SELECT e.id, e.name, e.email, e.address, e.salary, e.image, 
-    IFNULL(d.department_name, '') as category_name 
+    IFNULL(d.department_name, '') as category_name , e.post
     FROM employee e 
-    LEFT JOIN departments d ON e.category_id = d.department_id
+    LEFT JOIN departments d ON e.department_id = d.department_id
     `;
     con.query(sql, (err, result) => {
         if(err) return res.json({ Status: false, Error: "Query Error: " + err });
@@ -115,10 +120,10 @@ router.get('/employee', (req, res) => {
 
 router.get('/employee/:id', (req, res) => {
     const sql = `
-    SELECT e.id, e.name, e.email, e.address, e.salary, e.image, e.category_id, 
+    SELECT e.id, e.name, e.email, e.address, e.salary, e.image, e.department_id, 
            IFNULL(d.department_name, '') AS category_name
     FROM employee e
-    LEFT JOIN departments d ON e.category_id = d.department_id
+    LEFT JOIN departments d ON e.department_id = d.department_id
     WHERE e.id = ?`;
     con.query(sql, [req.params.id], (err, result) => {
         if (err) return res.json({ Status: false, Error: "Query Error: " + err });
@@ -133,20 +138,25 @@ router.get('/employee/:id', (req, res) => {
 router.put('/edit_employee/:id', (req, res) => {
     const id = req.params.id;
     const sql = `UPDATE employee 
-        set name = ?, email = ?, salary = ?, address = ?, category_id = ? 
-        Where id = ?`
+        SET name = ?, email = ?, salary = ?, address = ?, department_id = ?, post = ? 
+        WHERE id = ?`;
+
     const values = [
         req.body.name,
         req.body.email,
         req.body.salary,
         req.body.address,
-        req.body.category_id
-    ]
-    con.query(sql,[...values, id], (err, result) => {
-        if(err) return res.json({Status: false, Error: "Query Error"+err})
-        return res.json({Status: true, Result: result})
-    })
-})
+        req.body.department_id,
+        req.body.post // Add post to the values
+    ];
+
+    con.query(sql, [...values, id], (err, result) => {
+        if (err) {
+            return res.json({ Status: false, Error: "Query Error" + err });
+        }
+        return res.json({ Status: true, Result: result });
+    });
+});
 
 router.delete('/delete_employee/:id', (req, res) => {
     const id = req.params.id;

@@ -9,7 +9,8 @@ const EditEmployee = () => {
     email: "",
     salary: "",
     address: "",
-    category_id: "",
+    department_id: "",
+    post: "", // Added post field
   });
   const [category, setCategory] = useState([]);
   const navigate = useNavigate();
@@ -35,11 +36,12 @@ const EditEmployee = () => {
           email: result.data.Result[0].email,
           address: result.data.Result[0].address,
           salary: result.data.Result[0].salary,
-          category_id: result.data.Result[0].category_id || "",
+          department_id: result.data.Result[0].department_id || "",
+          post: result.data.Result[0].post || "", // Get post value
         });
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [id]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -61,7 +63,7 @@ const EditEmployee = () => {
         <h3 className="text-center">Edit Employee</h3>
         <form className="row g-1" onSubmit={handleSubmit}>
           <div className="col-12">
-            <label for="inputName" className="form-label">
+            <label htmlFor="inputName" className="form-label">
               Name
             </label>
             <input
@@ -76,7 +78,7 @@ const EditEmployee = () => {
             />
           </div>
           <div className="col-12">
-            <label for="inputEmail4" className="form-label">
+            <label htmlFor="inputEmail4" className="form-label">
               Email
             </label>
             <input
@@ -92,7 +94,7 @@ const EditEmployee = () => {
             />
           </div>
           <div className="col-12">
-            <label for="inputSalary" className="form-label">
+            <label htmlFor="inputSalary" className="form-label">
               Salary
             </label>
             <input
@@ -108,7 +110,7 @@ const EditEmployee = () => {
             />
           </div>
           <div className="col-12">
-            <label for="inputAddress" className="form-label">
+            <label htmlFor="inputAddress" className="form-label">
               Address
             </label>
             <input
@@ -124,16 +126,16 @@ const EditEmployee = () => {
             />
           </div>
           <div className="col-12">
-            <label for="category" className="form-label">
+            <label htmlFor="category" className="form-label">
               Department
             </label>
             <select
               name="category"
               id="category"
               className="form-select"
-              value={employee.category_id}
+              value={employee.department_id}
               onChange={(e) =>
-                setEmployee({ ...employee, category_id: e.target.value })
+                setEmployee({ ...employee, department_id: e.target.value })
               }
             >
               <option value="">Select Department</option>
@@ -142,6 +144,26 @@ const EditEmployee = () => {
                   {c.department_name}
                 </option>
               ))}
+            </select>
+          </div>
+
+          {/* Post Dropdown */}
+          <div className="col-12">
+            <label htmlFor="post" className="form-label">
+              Post
+            </label>
+            <select
+              id="post"
+              className="form-select"
+              value={employee.post}
+              onChange={(e) =>
+                setEmployee({ ...employee, post: e.target.value })
+              }
+            >
+              <option value="">Select Post</option>
+              <option value="Head">Head</option>
+              <option value="Manager">Manager</option>
+              <option value="Employee">Employee</option>
             </select>
           </div>
 

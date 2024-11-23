@@ -9,8 +9,9 @@ const AddEmployee = () => {
     password: "",
     salary: "",
     address: "",
-    category_id: "",
+    department_id: "",
     image: "",
+    post: "", // Changed from rank to post
   });
   const [category, setCategory] = useState([]);
   const navigate = useNavigate();
@@ -37,7 +38,8 @@ const AddEmployee = () => {
     formData.append("address", employee.address);
     formData.append("salary", employee.salary);
     formData.append("image", employee.image);
-    formData.append("category_id", employee.category_id || "");
+    formData.append("department_id", employee.department_id || "");
+    formData.append("post", employee.post); // Include post in form data
 
     axios
       .post("http://localhost:3000/auth/add_employee", formData)
@@ -57,7 +59,7 @@ const AddEmployee = () => {
         <h3 className="text-center">Add Employee</h3>
         <form className="row g-1" onSubmit={handleSubmit}>
           <div className="col-12">
-            <label for="inputName" className="form-label">
+            <label htmlFor="inputName" className="form-label">
               Name
             </label>
             <input
@@ -71,7 +73,7 @@ const AddEmployee = () => {
             />
           </div>
           <div className="col-12">
-            <label for="inputEmail4" className="form-label">
+            <label htmlFor="inputEmail4" className="form-label">
               Email
             </label>
             <input
@@ -86,7 +88,7 @@ const AddEmployee = () => {
             />
           </div>
           <div className="col-12">
-            <label for="inputPassword4" className="form-label">
+            <label htmlFor="inputPassword4" className="form-label">
               Password
             </label>
             <input
@@ -98,7 +100,7 @@ const AddEmployee = () => {
                 setEmployee({ ...employee, password: e.target.value })
               }
             />
-            <label for="inputSalary" className="form-label">
+            <label htmlFor="inputSalary" className="form-label">
               Salary
             </label>
             <input
@@ -113,7 +115,7 @@ const AddEmployee = () => {
             />
           </div>
           <div className="col-12">
-            <label for="inputAddress" className="form-label">
+            <label htmlFor="inputAddress" className="form-label">
               Address
             </label>
             <input
@@ -128,7 +130,7 @@ const AddEmployee = () => {
             />
           </div>
           <div className="col-12">
-            <label for="category" className="form-label">
+            <label htmlFor="category" className="form-label">
               Category
             </label>
             <select
@@ -136,8 +138,8 @@ const AddEmployee = () => {
               id="category"
               className="form-select"
               onChange={(e) =>
-                setEmployee({ ...employee, category_id: e.target.value })} 
-                >
+                setEmployee({ ...employee, department_id: e.target.value })}
+            >
               <option value="">Select Department</option>
               {category.map((c) => (
                 <option key={c.department_id} value={c.department_id}>
@@ -146,8 +148,25 @@ const AddEmployee = () => {
               ))}
             </select>
           </div>
+          <div className="col-12">
+            <label htmlFor="post" className="form-label">
+              Post
+            </label>
+            <select
+              id="post"
+              className="form-select"
+              onChange={(e) =>
+                setEmployee({ ...employee, post: e.target.value })
+              }
+            >
+              <option value="">Select Post</option>
+              <option value="Head">Head</option>
+              <option value="Manager">Manager</option>
+              <option value="Employee">Employee</option>
+            </select>
+          </div>
           <div className="col-12 mb-3">
-            <label className="form-label" for="inputGroupFile01">
+            <label className="form-label" htmlFor="inputGroupFile01">
               Select Image
             </label>
             <input

@@ -10,7 +10,7 @@ export const getAllEmployees = (req, res) => {
             salary, 
             address, 
             image, 
-            category_id
+            department_id
         FROM employee
     `;
 
