@@ -12,15 +12,17 @@ export const getAllProjects = (req, res) => {
 };
 
 export const addProject = (req, res) => {
-    const { projectName, customerName, startDate, expectedDate, budget, status } = req.body;
+    const { customerId, startDate, expectedDate, budget, status } = req.body;
 
     // Check if all required fields are provided
-    if (!projectName || !customerName || !startDate || !expectedDate || !budget || !status) {
+    if (!customerId || !startDate || !expectedDate || !budget || !status) {
         return res.status(400).json({ error: 'All fields are required' });
     }
 
-    const query = 'INSERT INTO projects (projectName, customerName, startDate, expectedDate, budget, status) VALUES (?, ?, ?, ?, ?, ?)';
-    con.query(query, [projectName, customerName, startDate, expectedDate, budget, status], (err, result) => {
+    // Modified query: Removed 'projectName' as it doesn't exist in the table
+    const query = 'INSERT INTO projects (customer_id, startDate, expectedDate, budget, status) VALUES (?, ?, ?, ?, ?)';
+    
+    con.query(query, [customerId, startDate, expectedDate, budget, status], (err, result) => {
         if (err) {
             return res.status(500).json({ error: err.message });
         }
@@ -30,6 +32,8 @@ export const addProject = (req, res) => {
         });
     });
 };
+
+
 
 
 //  project details apis

@@ -1,15 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ProjectForm.css'; // Import the CSS file
 
 const ProjectForm = () => {
   const [formData, setFormData] = useState({
     projectName: '',
-    customerName: '',
+    customerId: '', // Renamed to store customer_id
     startDate: '',
     expectedDate: '',
     budget: '',
     status: ''
   });
+
+  const [customers, setCustomers] = useState([]); // State to hold customer data
+
+  // Fetch customer data from the API
+  useEffect(() => {
+    fetch('http://localhost:3000/get_allCustomers')
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.Status) {
+          setCustomers(data.Result); // Store the customers if API call is successful
+        }
+      })
+      .catch((error) => console.error('Error fetching customers:', error));
+  }, []);
 
   // Handle change for form fields
   const handleChange = (e) => {
@@ -25,29 +39,29 @@ const ProjectForm = () => {
 
     // Send a POST request with the form data
     fetch('http://localhost:3000/projects/add', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
-        // Optionally, reset the form or notify the user of success
-        setFormData({
-            projectName: '',
-            customerName: '',
-            startDate: '',
-            expectedDate: '',
-            budget: '',
-            status: '',
-        });
+    .then((response) => response.json())
+    .then((data) => {
+      console.log('Success:', data);
+      // Optionally, reset the form or notify the user of success
+      setFormData({
+        projectName: '',
+        customerId: '', // Reset the customer_id field
+        startDate: '',
+        expectedDate: '',
+        budget: '',
+        status: '',
+      });
     })
     .catch((error) => {
-        console.error('Error:', error);
+      console.error('Error:', error);
     });
-};
+  };
 
   return (
     <div className="form-container">
@@ -66,15 +80,21 @@ const ProjectForm = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="customerName">Customer Name:</label>
-          <input
-            type="text"
-            id="customerName"
-            name="customerName"
-            value={formData.customerName}
+          <label htmlFor="customerId">Customer Name:</label>
+          <select
+            id="customerId"  // This corresponds to customerId now
+            name="customerId" // This will store the customer_id
+            value={formData.customerId} // Store the id in formData
             onChange={handleChange}
             required
-          />
+          >
+            <option value="">Select Customer</option>
+            {customers.map((customer) => (
+              <option key={customer.customer_id} value={customer.customer_id}>
+                {customer.full_name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="form-group">
