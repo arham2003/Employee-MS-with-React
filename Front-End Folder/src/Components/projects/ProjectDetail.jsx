@@ -61,6 +61,33 @@ function ProjectDetail() {
     setShowProjectModal(false); // Close the modal
   };
 
+  // Update project part (edit part functionality)
+  const handleUpdatePhase = (updatedPhase) => {
+    // Here, you can update the specific project phase (or part) logic
+    setProjectParts(prevParts => 
+      prevParts.map(part => 
+        part.part_id === updatedPhase.part_id ? updatedPhase : part
+      )
+    );
+  };
+
+  // Handle deletion of a project part
+  const handleDelete = async (partId) => {
+    try {
+      const response = await axios.delete(`http://localhost:3000/api/project_parts/${partId}`);
+      if (response.status === 200) {
+        // Update the state to remove the deleted part
+        setProjectParts(projectParts.filter((part) => part.part_id !== partId));
+        alert("Project part deleted successfully");
+      } else {
+        alert("Failed to delete project part");
+      }
+    } catch (error) {
+      console.error("Error deleting project part", error);
+      alert("Error deleting project part");
+    }
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
@@ -116,7 +143,11 @@ function ProjectDetail() {
             {partsError ? (
               <p>{partsError}</p> // Show error message if API for project parts fails
             ) : (
-              <ProjectPhase projectParts={projectParts} /> // Show the project parts if data is available
+              <ProjectPhase 
+                projectParts={projectParts} 
+                handleDelete={handleDelete} // Pass handleDelete to ProjectPhase
+                onUpdatePhase={handleUpdatePhase} // Pass handleUpdatePhase to ProjectPhase
+              /> // Show the project parts if data is available
             )}
           </div>
         </div>

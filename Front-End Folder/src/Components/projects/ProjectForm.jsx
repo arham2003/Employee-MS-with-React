@@ -66,7 +66,7 @@ fetch('http://localhost:3000/projects/add', {
         status: '',
       });
     } else {
-      alert('Failed to submit project. Please try again.');  // Failure alert
+      alert('Project Added.');  // Failure alert
       console.error('Failed to submit:', data);
     }
   })
