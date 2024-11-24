@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import ProgressBar from "react-bootstrap/ProgressBar";
 import { Table, Button, Modal } from "react-bootstrap";
-import ProjectPartForm from "./ProjectPartForm"; // Import the modal form component
 import ProjectForm from "./ProjectForm"; // Import the ProjectForm component
-import "./ProjectDetail.css";
 import axios from "axios"; // Axios for making API calls
 import ProjectPhase from "./ProjectPhase"; // Import the ProjectPhase component
 
@@ -14,183 +11,65 @@ function ProjectDetail() {
   const [projectParts, setProjectParts] = useState([]); // Project parts state
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
-  const [newPart, setNewPart] = useState({
-    part_id: "", // Ensure part_id is included in the state
-    part_name: "",
-    employee: "",
-    department: "",
-    startDate: "",
-    endDate: "",
-    status: "",
-    contribution: "",
-  });
-
-  const [showForm, setShowForm] = useState(false); // Modal state for adding/editing part
-  const [isEditing, setIsEditing] = useState(false); // State to track if we are editing a part
   const [showProjectModal, setShowProjectModal] = useState(false); // Modal for editing project details
-  const [customer, setCustomer] = useState(null); // To store customer data
-
+  const [partsError, setPartsError] = useState(null); // Error for project parts
 
   // Fetch project details and parts from the backend
   useEffect(() => {
-    console.log("Id " ,id)
     const fetchProjectData = async () => {
       try {
-        // Fetch project data
-        const response = await fetch(
-          `http://localhost:3000/api/projects/${id}`
-        );
+        const response = await fetch(`http://localhost:3000/api/projects/${id}`);
         if (!response.ok) {
           throw new Error("Failed to fetch project data");
         }
         const projectData = await response.json();
-        setProject(projectData); // Store project data
-
-        // Fetch project parts data
-        const partsResponse = await fetch(
-          `http://localhost:3000/project_parts/${id}`
-        );
-        if (!partsResponse.ok) {
-          throw new Error("Failed to fetch project parts data");
+        if (projectData) {
+          setProject(projectData); // Store project data
+        } else {
+          setError("Project Phases Not Decided Yet");
         }
-        const partsData = await partsResponse.json();
-        setProjectParts(partsData); // Store project parts data
+
+        // Fetch project parts after loading the project details
+        try {
+          const partsResponse = await fetch(`http://localhost:3000/project_parts/${id}`);
+          if (!partsResponse.ok) {
+            throw new Error("Failed to fetch project parts");
+          }
+          const partsData = await partsResponse.json();
+          setProjectParts(partsData); // Store the actual project parts data
+        } catch (partsErr) {
+          setPartsError("Project Phases Not Decided Yet."); // Handle failure in fetching project parts
+          setProjectParts([]); // Optional: Empty array when the parts fetch fails
+        }
       } catch (err) {
-        console.error("Error fetching project data:", err);
-        setError("Error fetching project data"); // Optional: display error to user
+        setError("Error fetching project data.");
       } finally {
-        setLoading(false); // Optional: set loading state to false after data is fetched
+        setLoading(false);
       }
     };
 
     fetchProjectData();
   }, [id]);
 
-  // Handle change for adding/editing a part
-  const handlePartChange = (e) => {
-    const { name, value } = e.target;
-    setNewPart((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  // Handle form submission for adding or updating a part
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    if (isEditing) {
-      updatePart();
-    } else {
-      addPart();
-    }
-  };
-
-  // Add a new part
-  const addPart = () => {
-    // You would also want to save it to the backend here
-    setProjectParts((prevState) => [...prevState, newPart]);
-    resetForm(); // Reset the form and hide it
-  };
-
-  const editPart = (part) => {
-    setNewPart({
-      part_id: part.part_id, // Ensure part_id is included in the part state
-      part_name: part.part_name,
-      employee: part.employee,
-      department: part.department,
-      startDate: part.start_date,
-      endDate: part.end_date,
-      status: part.status,
-      contribution: part.contribution_percentage,
-    });
-    setShowForm(true); // Show the form for editing
-    setIsEditing(true); // Mark that we are editing
-  };
-
-  // Update a part after editing
-  const updatePart = () => {
-    // Here you would also update it in the backend via an API
-    const updatedParts = projectParts.map((part) =>
-      part.part_id === newPart.part_id ? newPart : part
-    );
-    setProjectParts(updatedParts);
-    resetForm(); // Reset the form and hide it
-  };
-
-  // Remove a part
-  const handleDelete = (id) => {
-    axios
-      .delete(`http://localhost:3000/api/project_parts/${id}`)
-      .then((result) => {
-        if (result.data.Status) {
-          window.location.reload(); // Optionally reload the page to reflect the changes
-        } else {
-          alert(result.data.Error); // Display any error from the response
-        }
-      })
-      .catch((err) => console.log(err)); // Catch any errors
-  };
-
-  // Function to reset the form
-  const resetForm = () => {
-    setNewPart({
-      part_id: "",
-      part_name: "",
-      employee: "",
-      department: "",
-      startDate: "",
-      endDate: "",
-      status: "",
-      contribution: "",
-    });
-    setIsEditing(false); // Reset editing state
-    setShowForm(false); // Hide the form modal
-  };
-
   // Handle project details form visibility
-  const toggleProjectForm = () => {
-    setShowProjectModal(true); // Show the project details modal
-  };
+  const toggleProjectForm = () => setShowProjectModal(true); // Show the project details modal
+  const handleCloseProjectModal = () => setShowProjectModal(false); // Hide the project details modal
 
-  // Handle closing the project details modal
-  const handleCloseProjectModal = () => {
-    setShowProjectModal(false); // Hide the project details modal
-  };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   // Function to format the date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const options = {
-      timeZone: "Asia/Karachi", // Specify the timezone as Karachi (Pakistan Standard Time)
-      weekday: "short", // "Sat"
-      day: "numeric", // "30"
-      month: "short", // "Nov"
-      year: "numeric", // "30"
-    };
-
-    return date.toLocaleString("en-US", options); // Format and return the date
+    const options = { timeZone: "Asia/Karachi", weekday: "short", day: "numeric", month: "short", year: "numeric" };
+    return date.toLocaleString("en-US", options);
   };
 
   return (
-    <div
-      className="project-detail-container"
-      style={{ padding: "20px", textAlign: "center" }}
-    >
+    <div className="project-detail-container" style={{ padding: "20px", textAlign: "center" }}>
       {project ? (
         <div className="project-details">
-          <Button
-            variant="primary"
-            onClick={toggleProjectForm}
-            style={{ marginBottom: "20px" }}
-          >
+          <Button variant="primary" onClick={toggleProjectForm} style={{ marginBottom: "20px" }}>
             Edit Project Details
           </Button>
 
@@ -203,67 +82,30 @@ function ProjectDetail() {
               <ProjectForm /> {/* Your ProjectForm component goes here */}
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={handleCloseProjectModal}>
-                Close
-              </Button>
-              <Button variant="primary" onClick={handleCloseProjectModal}>
-                Save Changes
-              </Button>
+              <Button variant="secondary" onClick={handleCloseProjectModal}>Close</Button>
+              <Button variant="primary" onClick={handleCloseProjectModal}>Save Changes</Button>
             </Modal.Footer>
           </Modal>
 
           <h3>{project.projectName}</h3>
-          <ProgressBar
-            now={project.progress}
-            label={`${project.progress}%`}
-            style={{ marginBottom: "20px" }}
-          />
-
-          {/* Project Details Table */}
-          <h5>Project Details</h5>
           <Table striped bordered hover style={{ marginBottom: "40px" }}>
             <tbody>
-              <tr>
-                <td>
-                  <strong>Customer:</strong>
-                </td>
-                <td>{project.customerName}</td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>Start Date:</strong>
-                </td>
-                <td>{formatDate(project.startDate)}</td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>End Date:</strong>
-                </td>
-                <td>{formatDate(project.expectedDate)}</td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>Budget:</strong>
-                </td>
-                <td>${project.budget.toLocaleString()}</td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>Status:</strong>
-                </td>
-                <td>{project.status}</td>
-              </tr>
+              <tr><td><strong>Customer:</strong></td><td>{project.customerName}</td></tr>
+              <tr><td><strong>Start Date:</strong></td><td>{formatDate(project.startDate)}</td></tr>
+              <tr><td><strong>End Date:</strong></td><td>{formatDate(project.expectedDate)}</td></tr>
+              <tr><td><strong>Budget:</strong></td><td>${project.budget.toLocaleString()}</td></tr>
+              <tr><td><strong>Status:</strong></td><td>{project.status}</td></tr>
             </tbody>
           </Table>
 
-          <ProjectPhase
-            projectParts={projectParts}  // Pass the correct data
-            editPart={editPart}  // Pass the correct edit handler
-            handleDelete={handleDelete}  // Pass the correct delete handler
-          />
-          
-          {/* Modal Form for Adding/Editing a Part */}
-
+          {/* Project Phase Table */}
+          <div>
+            {partsError ? (
+              <p>{partsError}</p> // Show error message if API for project parts fails
+            ) : (
+              <ProjectPhase projectParts={projectParts} /> // Show the project parts if data is available
+            )}
+          </div>
         </div>
       ) : (
         <p>Project not found</p>
@@ -273,7 +115,3 @@ function ProjectDetail() {
 }
 
 export default ProjectDetail;
-
-
-
-

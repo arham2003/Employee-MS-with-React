@@ -43,33 +43,39 @@ const ProjectForm = () => {
     console.log('Form Data Submitted:', formData);  // Debugging step
 
     // Send a POST request with the form data
-    fetch('http://localhost:3000/projects/add', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log('Response from server:', data);  // Debugging step
-      // Optionally, reset the form or notify the user of success
-      if (data.Status === 'Success') {
-        setFormData({
-          projectName: '',
-          customerId: '',
-          startDate: '',
-          expectedDate: '',
-          budget: '',
-          status: '',
-        });
-      } else {
-        console.error('Failed to submit:', data);
-      }
-    })
-    .catch((error) => {
-      console.error('Error during submission:', error);
-    });
+fetch('http://localhost:3000/projects/add', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(formData),
+})
+  .then((response) => response.json())
+  .then((data) => {
+    console.log('Response from server:', data);  // Debugging step
+
+    // Check the response status and show appropriate alert
+    if (data.Status === 'Success') {
+      alert('Project added successfully!');  // Success alert
+      setFormData({
+        projectName: '',
+        customerId: '',
+        startDate: '',
+        expectedDate: '',
+        budget: '',
+        status: '',
+      });
+    } else {
+      alert('Failed to submit project. Please try again.');  // Failure alert
+      console.error('Failed to submit:', data);
+    }
+  })
+  .catch((error) => {
+    console.error('Error during submission:', error);
+    alert('Error during submission. Please try again later.');  // Error alert
+  });
+
+
   };
 
   return (
