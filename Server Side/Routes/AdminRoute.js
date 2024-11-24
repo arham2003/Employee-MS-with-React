@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 import bcrypt from 'bcrypt'
 import multer from "multer";
 import path from "path";
+import nodemailer from 'nodemailer';
+import 'dotenv/config';
 
 const router = express.Router();
 
@@ -86,13 +88,43 @@ router.post('/add_employee', upload.single('image'), (req, res) => {
             categoryId,
             post  // Adding post to the values array
         ];
-
         con.query(sql, [values], (err, result) => {
             if (err) return res.json({ Status: false, Error: err });
+           // Send email notification
+           const transporter = nodemailer.createTransport({
+              service: "gmail",
+              auth: {
+                user: process.env.EMAIL_USER, // Replace with your email
+                pass: process.env.EMAIL_PASS, // Replaced with app-specific password
+              },
+            });
+      
+            const mailOptions = {
+              from: {
+                address: process.env.EMAIL_USER
+              },
+              to: req.body.email, // Employee's email
+              subject: "Welcome to the No. 1 Company! 🥳",
+              text: `Hi ${req.body.name},\n\nYour account has been created successfully.\n\nHere are your login details:\nEmail: ${req.body.email}\nPassword: ${req.body.password}\n\nPlease log in and change your password for security.\n\nBest regards,\nGray Coders`,
+            };
+      
+            transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                console.error("Error sending email:", error);
+                return res.json({ Status: false, Error: "Email not sent" });
+              }
+              console.log("Email sent: " + info.response);
+              return res.json({
+                Status: true,
+                Message: "Employee added and email sent successfully!",
+              });
+            });
+      
             return res.json({ Status: true });
+           
+          });
         });
-    });
-});
+      });
 
 
 // router.get('/employee', (req, res) => {

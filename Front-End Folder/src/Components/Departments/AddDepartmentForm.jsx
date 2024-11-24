@@ -1,6 +1,8 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddDepartment = () => {
     const [departmentName, setDepartmentName] = useState('');
@@ -20,31 +22,28 @@ const AddDepartment = () => {
                 setEmployees(response.data); // Store the employee data
             })
             .catch(err => {
-                console.log("Failed to fetch employees:", err);
+                toast.error("Failed to fetch employees. Please try again.");
+                console.error("Failed to fetch employees:", err);
             });
     }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
-        // Prepare the department object
+
         const department = {
             department_name: departmentName,
-            department_head: departmentHead, // This will be the employee ID selected
+            department_head: departmentHead,
             street,
             city,
             state,
             postal_code: postalCode,
-            country
+            country,
         };
-    
-        // Send POST request to the backend API
+
         axios.post('http://localhost:3000/add_department', department)
             .then(result => {
                 if (result.data.Status) {
-                    // Show a success alert
-                    alert("Department added successfully!");
-                    // Reset form fields
+                    toast.success("Department added successfully!");
                     setDepartmentName('');
                     setDepartmentHead('');
                     setStreet('');
@@ -52,15 +51,14 @@ const AddDepartment = () => {
                     setState('');
                     setPostalCode('');
                     setCountry('');
-                    // Optionally, navigate away to a different page
-                    navigate('/dashboard/departments'); // Redirect to the department list or dashboard
+                    navigate('/dashboard/departments');
                 } else {
-                    alert(result.data.Error); // Show any error from the backend
+                    toast.error(result.data.Error);
                 }
             })
             .catch(err => {
-                console.log("Error adding department:", err); // Log any error from the POST request
-                alert("Department Already Exists. Change the Department Name");
+                toast.error("Department already exists. Please use a different name.");
+                console.error("Error adding department:", err);
             });
     };
 

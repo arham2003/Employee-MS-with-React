@@ -33,7 +33,7 @@ function Projects() {
           Add Phase
         </Link>
 
-        <div className="projects-list row row-cols-md-3">
+        <div className="projects-list row">
           {projects.map((project) => (
             <div key={project.id} className="col mb-4">
               <div className="card">

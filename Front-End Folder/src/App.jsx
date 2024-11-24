@@ -24,6 +24,9 @@ import Attendance from './Components/Attendance/Attendance'
 import Customer from './Components/Customer/Customer'
 import Departments from './Components/Departments/Departments'
 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function App() {
   return (
     <BrowserRouter>
@@ -63,6 +66,7 @@ function App() {
           <Route path="/dashboard/edit_employee/:id" element={<EditEmployee />}></Route>
         </Route>
       </Routes>
+      <ToastContainer/>
     </BrowserRouter>
   )
 }

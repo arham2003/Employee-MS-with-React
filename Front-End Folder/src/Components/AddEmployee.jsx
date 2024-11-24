@@ -1,57 +1,60 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+  import "react-toastify/dist/ReactToastify.css";
 
-const AddEmployee = () => {
-  const [employee, setEmployee] = useState({
-    name: "",
-    email: "",
-    password: "",
-    salary: "",
-    address: "",
-    department_id: "",
-    image: "",
-    post: "", // Changed from rank to post
-  });
-  const [category, setCategory] = useState([]);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/auth/departments")
-      .then((result) => {
-        if (result.data.Status) {
-          setCategory(result.data.Result);
-        } else {
-          alert(result.data.Error);
-        }
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("name", employee.name);
-    formData.append("email", employee.email);
-    formData.append("password", employee.password);
-    formData.append("address", employee.address);
-    formData.append("salary", employee.salary);
-    formData.append("image", employee.image);
-    formData.append("department_id", employee.department_id || "");
-    formData.append("post", employee.post); // Include post in form data
-
-    axios
-      .post("http://localhost:3000/auth/add_employee", formData)
-      .then((result) => {
-        if (result.data.Status) {
-          navigate("/dashboard/employee");
-        } else {
-          alert(result.data.Error);
-        }
-      })
-      .catch((err) => console.log(err));
-  };
+  const AddEmployee = () => {
+    const [employee, setEmployee] = useState({
+      name: "",
+      email: "",
+      password: "",
+      salary: "",
+      address: "",
+      department_id: "",
+      image: "",
+      post: "",
+    });
+    const [category, setCategory] = useState([]);
+    const navigate = useNavigate();
+  
+    useEffect(() => {
+      axios
+        .get("http://localhost:3000/auth/departments")
+        .then((result) => {
+          if (result.data.Status) {
+            setCategory(result.data.Result);
+          } else {
+            toast.error(result.data.Error);
+          }
+        })
+        .catch((err) => toast.error("Error fetching departments!"));
+    }, []);
+  
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      const formData = new FormData();
+      formData.append("name", employee.name);
+      formData.append("email", employee.email);
+      formData.append("password", employee.password);
+      formData.append("address", employee.address);
+      formData.append("salary", employee.salary);
+      formData.append("image", employee.image);
+      formData.append("department_id", employee.department_id || "");
+      formData.append("post", employee.post);
+  
+      axios
+        .post("http://localhost:3000/auth/add_employee", formData)
+        .then((result) => {
+          if (result.data.Status) {
+            toast.success(result.data.Message || "Employee added and Email Sent successfully!");
+            setTimeout(() => navigate("/dashboard/employee"), 2000);
+          } else {
+            toast.error(result.data.Error);
+          }
+        })
+        .catch((err) => toast.error("Error adding employee!"));
+    };
 
   return (
     <div className="d-flex justify-content-center align-items-center mt-3">
@@ -186,6 +189,8 @@ const AddEmployee = () => {
           </div>
         </form>
       </div>
+      {/* Toast Container */}
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };

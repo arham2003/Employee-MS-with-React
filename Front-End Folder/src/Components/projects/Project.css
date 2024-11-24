@@ -14,12 +14,12 @@
 .projects-list {
   margin-top: 30px;
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Two columns per row */
-  gap: 1rem; /* Spacing between cards */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+  gap: 7rem; /* Spacing between cards */
 }
 
 .card {
-  width: 500px; /* Make the card take the full width of the column */
+  width: 380px; /* Make the card take the full width of the column */
   display: flex;
   flex-direction: column;
   justify-content: center;

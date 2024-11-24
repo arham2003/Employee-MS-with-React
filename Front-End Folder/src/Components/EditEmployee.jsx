@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+
 
 const EditEmployee = () => {
   const { id } = useParams();
@@ -22,39 +24,55 @@ const EditEmployee = () => {
         if (result.data.Status) {
           setCategory(result.data.Result);
         } else {
-          alert(result.data.Error);
+          toast.error(result.data.Error);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error(err);
+        toast.error("Failed to fetch departments. Please try again.");
+      });
 
-    axios
+
+      axios
       .get("http://localhost:3000/auth/employee/" + id)
       .then((result) => {
-        setEmployee({
-          ...employee,
-          name: result.data.Result[0].name,
-          email: result.data.Result[0].email,
-          address: result.data.Result[0].address,
-          salary: result.data.Result[0].salary,
-          department_id: result.data.Result[0].department_id || "",
-          post: result.data.Result[0].post || "", // Get post value
-        });
+        if (result.data.Result && result.data.Result[0]) {
+          setEmployee({
+            ...employee,
+            name: result.data.Result[0].name,
+            email: result.data.Result[0].email,
+            address: result.data.Result[0].address,
+            salary: result.data.Result[0].salary,
+            department_id: result.data.Result[0].department_id || "",
+            post: result.data.Result[0].post || "",
+          });
+        } else {
+          toast.error("Employee details not found.");
+        }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error(err);
+        toast.error("Failed to fetch employee details.");
+      });
   }, [id]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     axios
       .put("http://localhost:3000/auth/edit_employee/" + id, employee)
       .then((result) => {
         if (result.data.Status) {
-          navigate("/dashboard/employee");
+          toast.success("Employee updated successfully!");
+          setTimeout(() => navigate("/dashboard/employee"), 2000); // Redirect after 2 seconds
         } else {
-          alert(result.data.Error);
+          toast.error(result.data.Error);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error(err);
+        toast.error("Failed to update employee. Please try again.");
+      });
   };
 
   return (
