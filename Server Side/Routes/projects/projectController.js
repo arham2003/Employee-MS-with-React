@@ -168,14 +168,17 @@ export const deleteProjectPart = (req, res) => {
         res.status(200).json({ Status: true, message: 'Project part deleted successfully' });
     });
 };
-// Adding the project part
 export const addProjectPart = (req, res) => {
-    const { part, employee, department, startDate, endDate, status, contribution } = req.body;
+    const { part, employee, startDate, endDate, status, contribution } = req.body;
     const projectId = req.params.id;  // Extract projectId from the URL
 
-    // Check if all required fields are provided
-    if (!projectId || !part || !employee || !department || !startDate || !endDate || !status || contribution === undefined) {
-        return res.status(400).json({ error: 'All fields are required' });
+    // Convert data types
+    const contributionPercentage = parseFloat(contribution);  // Ensure contribution is a decimal
+    const employeeId = parseInt(employee);  // Ensure employee is an integer
+
+    // Check if all required fields are provided and have valid types
+    if (!projectId || !part || !employee || !startDate || !endDate || !status || isNaN(contributionPercentage)) {
+        return res.status(400).json({ error: 'All fields are required and contribution should be a valid number' });
     }
 
     // Check if the project exists in the projects table
@@ -191,10 +194,10 @@ export const addProjectPart = (req, res) => {
         }
 
         // If the project exists, insert the new part into the project_parts table
-        const query = `INSERT INTO project_parts (project_id, part_name, employee_id, department, start_date, end_date, status, contribution_percentage)
-                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+        const query = `INSERT INTO project_parts (project_id, part_name, employee_id, start_date, end_date, status, contribution_percentage)
+                       VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
-        con.query(query, [projectId, part, employee, department, startDate, endDate, status, contribution], (err, result) => {
+        con.query(query, [projectId, part, employeeId, startDate, endDate, status, contributionPercentage], (err, result) => {
             if (err) {
                 return res.status(500).json({ error: err.message });
             }
@@ -205,6 +208,8 @@ export const addProjectPart = (req, res) => {
         });
     });
 };
+
+
 
 
 export const getProjectIds = (req, res) => {

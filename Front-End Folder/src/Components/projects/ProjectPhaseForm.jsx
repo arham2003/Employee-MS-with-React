@@ -3,13 +3,11 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
-
 function ProjectPhaseForm() {
   const [newPhase, setNewPhase] = useState({
     projectId: '',
-    part: '', // Changed to 'part' to match API
+    part: '',
     employee: '',
-    department: '',
     startDate: '',
     endDate: '',
     status: '',
@@ -17,11 +15,14 @@ function ProjectPhaseForm() {
   });
 
   const [projects, setProjects] = useState([]);  // State to store project data
+  const [employees, setEmployees] = useState([]); // State to store employee data
   const [show, setShow] = useState(true);  // Manage modal visibility
   const [isEditing, setIsEditing] = useState(false);  // Track if it's in editing mode
+  const navigate = useNavigate();  // Use navigate hook
 
-  // Fetch project data when the component mounts
+  // Fetch project and employee data when the component mounts
   useEffect(() => {
+    console.log("Form Data: ", newPhase); 
     const fetchProjects = async () => {
       try {
         const response = await axios.get('http://localhost:3000/get_project_ids');
@@ -31,7 +32,17 @@ function ProjectPhaseForm() {
       }
     };
 
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/auth/employee');
+        setEmployees(response.data.Result);  // Store the fetched employees in the state
+      } catch (error) {
+        console.error('Error fetching employees:', error.message);
+      }
+    };
+
     fetchProjects();  // Call the function to fetch projects
+    fetchEmployees(); // Call the function to fetch employees
   }, []); // Empty dependency array means this effect runs only once after the initial render
 
   const handleFormChange = (e) => {
@@ -44,10 +55,11 @@ function ProjectPhaseForm() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    console.log(newPhase)
+    console.log("new ",newPhase);
+    
 
     // Check if all fields are filled
-    if (!newPhase.projectId || !newPhase.part || !newPhase.employee || !newPhase.department || !newPhase.startDate || !newPhase.endDate || !newPhase.status || !newPhase.contribution) {
+    if (!newPhase.projectId || !newPhase.part || !newPhase.employee || !newPhase.startDate || !newPhase.endDate || !newPhase.status || !newPhase.contribution) {
       alert('All fields are required');
       return;
     }
@@ -58,7 +70,7 @@ function ProjectPhaseForm() {
 
       console.log(response.data);
       alert('Phase added successfully!');
-      
+
       // Close the modal after submission
       setShow(false);
       navigate('/dashboard');
@@ -68,10 +80,7 @@ function ProjectPhaseForm() {
     }
   };
 
-  const handleClose = () => {
-    
-    setShow(false)};  // Close modal handler
-    // navigate('/dashboard')
+  const handleClose = () => setShow(false);  // Close modal handler
 
   return (
     <Modal show={show} onHide={handleClose} centered>
@@ -106,7 +115,7 @@ function ProjectPhaseForm() {
             <Form.Label>Phase</Form.Label>
             <Form.Control
               type="text"
-              name="part"  // Changed to 'part' to match API
+              name="part"
               value={newPhase.part}
               onChange={handleFormChange}
               placeholder="Enter phase name"
@@ -114,28 +123,27 @@ function ProjectPhaseForm() {
             />
           </Form.Group>
 
+          {/* Employee dropdown field */}
           <Form.Group>
             <Form.Label>Employee</Form.Label>
             <Form.Control
-              type="number"
+              as="select"
               name="employee"
               value={newPhase.employee}
               onChange={handleFormChange}
-              placeholder="Enter employee ID"
               required
-            />
-          </Form.Group>
-
-          <Form.Group>
-            <Form.Label>Department</Form.Label>
-            <Form.Control
-              type="text"
-              name="department"
-              value={newPhase.department}
-              onChange={handleFormChange}
-              placeholder="Enter department"
-              required
-            />
+            >
+              <option value="">Select Employee</option>
+              {employees.length > 0 ? (
+                employees.map((employee) => (
+                  <option key={employee.id} value={employee.id}>
+                    {employee.name} - {employee.post} ({employee.category_name}) {/* Display employee details */}
+                  </option>
+                ))
+              ) : (
+                <option disabled>No employees available</option>
+              )}
+            </Form.Control>
           </Form.Group>
 
           <Form.Group>
@@ -194,9 +202,8 @@ function ProjectPhaseForm() {
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose} >
+        <Button variant="secondary" onClick={handleClose}>
           Close
-          
         </Button>
       </Modal.Footer>
     </Modal>

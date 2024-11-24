@@ -5,7 +5,7 @@ import { EmployeeRouter } from "./Routes/EmployeeRoute.js";
 import Jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 import { getAllProjects , addProject, getAllProjectParts, getProjectPartsByProjectId, getProjectById, deleteProjectPart, addProjectPart, getProjectIds, getProjectPartById, updateProjectPartById} from "./Routes/projects/projectController.js";
-import { addCustomer,  deleteCustomerById, editCustomer, getAllCustomers } from "./Routes/customer/customer.js";
+import { addCustomer,  deleteCustomerById, editCustomer, getAllCustomers, getCustomerById } from "./Routes/customer/customer.js";
 import { addDepartment, deleteDepartment, getAllDepartments, getAllEmployees, updateDepartment } from "./Routes/departments/departments.js";
 
 const app = express() 
@@ -52,6 +52,7 @@ app.get('/get_allCustomers',getAllCustomers)
 app.post('/add_customer',addCustomer)
 app.delete('/delete_customer/:customerId',deleteCustomerById)
 app.put('/edit_customer/:customerId',editCustomer)
+app.get('/get_customerById/:id',getCustomerById)
 
 // Departments APIS
 app.get('/get_all_employees',getAllEmployees)

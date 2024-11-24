@@ -24,6 +24,36 @@ export const getAllCustomers = (req, res) => {
         return res.status(200).json({ Status: true, Result: result });
     });
 };
+
+export const getCustomerById = (req, res) => {
+    const customerId = req.params.id; // Assuming you're passing the ID as a URL parameter
+    const sql = `
+        SELECT 
+            customer_id, 
+            full_name, 
+            email, 
+            phone_number, 
+            company_name, 
+            street_address, 
+            city, 
+            state, 
+            postal_code, 
+            country
+        FROM customerDetails
+        WHERE customer_id = ?
+    `;
+
+    con.query(sql, [customerId], (err, result) => {
+        if (err) {
+            return res.status(500).json({ Status: false, Error: "Query Error: " + err });
+        }
+        if (result.length === 0) {
+            return res.status(404).json({ Status: false, Message: "Customer not found" });
+        }
+        return res.status(200).json(result);
+    });
+};
+
 // Add the customer 
 export const addCustomer = (req, res) => {
     const { full_name, email, phone_number, company_name, street_address, city, state, postal_code, country } = req.body;

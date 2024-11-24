@@ -28,9 +28,12 @@ function ProjectDetail() {
   const [showForm, setShowForm] = useState(false); // Modal state for adding/editing part
   const [isEditing, setIsEditing] = useState(false); // State to track if we are editing a part
   const [showProjectModal, setShowProjectModal] = useState(false); // Modal for editing project details
+  const [customer, setCustomer] = useState(null); // To store customer data
+
 
   // Fetch project details and parts from the backend
   useEffect(() => {
+    console.log("Id " ,id)
     const fetchProjectData = async () => {
       try {
         // Fetch project data
