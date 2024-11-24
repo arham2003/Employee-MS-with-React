@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Table, Button, Modal } from "react-bootstrap";
-import ProjectForm from "./ProjectForm"; // Import the ProjectForm component
+import ProjectForm from "./ProjectUpdateForm"; // Import the ProjectForm component
 import axios from "axios"; // Axios for making API calls
 import ProjectPhase from "./ProjectPhase"; // Import the ProjectPhase component
 
@@ -58,11 +58,10 @@ function ProjectDetail() {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
-  // Function to format the date
-  const formatDate = (dateString) => {
+  // Function to format the date for input field
+  const formatDateForInput = (dateString) => {
     const date = new Date(dateString);
-    const options = { timeZone: "Asia/Karachi", weekday: "short", day: "numeric", month: "short", year: "numeric" };
-    return date.toLocaleString("en-US", options);
+    return date.toISOString().split("T")[0]; // Get the date in YYYY-MM-DD format
   };
 
   return (
@@ -79,7 +78,14 @@ function ProjectDetail() {
               <Modal.Title>Edit Project Details</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <ProjectForm /> {/* Your ProjectForm component goes here */}
+              {/* Pass the current project data to the form and format the dates */}
+              <ProjectForm 
+                project={{
+                  ...project,
+                  startDate: formatDateForInput(project.startDate),
+                  expectedDate: formatDateForInput(project.expectedDate),
+                }} 
+              />
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleCloseProjectModal}>Close</Button>
@@ -91,8 +97,8 @@ function ProjectDetail() {
           <Table striped bordered hover style={{ marginBottom: "40px" }}>
             <tbody>
               <tr><td><strong>Customer:</strong></td><td>{project.customerName}</td></tr>
-              <tr><td><strong>Start Date:</strong></td><td>{formatDate(project.startDate)}</td></tr>
-              <tr><td><strong>End Date:</strong></td><td>{formatDate(project.expectedDate)}</td></tr>
+              <tr><td><strong>Start Date:</strong></td><td>{formatDateForInput(project.startDate)}</td></tr>
+              <tr><td><strong>End Date:</strong></td><td>{formatDateForInput(project.expectedDate)}</td></tr>
               <tr><td><strong>Budget:</strong></td><td>${project.budget.toLocaleString()}</td></tr>
               <tr><td><strong>Status:</strong></td><td>{project.status}</td></tr>
             </tbody>

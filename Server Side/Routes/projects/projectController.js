@@ -151,6 +151,37 @@ export const getProjectById = (req, res) => {
     });
 };
 
+// export const getProjectById = (req, res) => {
+//     const { id } = req.params;
+
+//     // SQL query to get project details along with the customer name
+//     const sql = `
+//         SELECT 
+//             p.*,        -- Get all project details
+//             cd.full_name AS customerName  -- Get customer full name
+//         FROM projects p
+//         JOIN customerdetails cd ON p.customer_id = cd.customer_id
+//         WHERE p.id = ?
+//     `;
+
+//     con.query(sql, [id], (err, result) => {
+//         if (err) {
+//             return res.status(500).json({ error: err.message });
+//         }
+//         if (result.length === 0) {
+//             return res.status(404).json({ error: 'Project not found' });
+//         }
+
+//         // Return the project details along with the customer name
+//         return res.status(200).json({
+//             Status: true,
+//             Project: result[0],  // Project details
+//             CustomerName: result[0].customerName  // Customer name
+//         });
+//     });
+// };
+
+
 // Delete Project Part
 export const deleteProjectPart = (req, res) => {
     const { partId } = req.params; // Extract the partId from the request parameters
