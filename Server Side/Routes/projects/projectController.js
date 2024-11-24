@@ -32,6 +32,46 @@ export const addProject = (req, res) => {
       });
     });
   };
+
+  export const updateProject = (req, res) => {
+    console.log(req.body); // Log the body to check the received data
+  
+    // Destructure the required fields from the request body
+    const { id, projectName, startDate, expectedDate, budget, status } = req.body;
+  
+    // Check if all required fields are present
+    if (!id || !projectName || !startDate || !expectedDate || !budget || !status) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+  
+    // SQL query to update the project details
+    const query = `
+      UPDATE projects 
+      SET projectName = ?, startDate = ?, expectedDate = ?, budget = ?, status = ? 
+      WHERE id = ?
+    `;
+  
+    // Run the query with the provided data
+    con.query(query, [projectName, startDate, expectedDate, budget, status, id], (err, result) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+  
+      // Check if any row was updated (i.e., project exists)
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: 'Project not found' });
+      }
+  
+      // Return a success response with the updated projectId
+      res.status(200).json({
+        message: 'Project updated successfully',
+        projectId: id
+      });
+    });
+  };
+  
+  
+
   
 
 
@@ -136,50 +176,50 @@ export const updateProjectPartById = (req, res) => {
 
 
 
-export const getProjectById = (req, res) => {
-    const { id } = req.params;
-
-    const query = 'SELECT * FROM projects WHERE id = ?';
-    con.query(query, [id], (err, result) => {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
-        if (result.length === 0) {
-            return res.status(404).json({ error: 'Project not found' });
-        }
-        res.status(200).json(result[0]); // Return the project details
-    });
-};
-
 // export const getProjectById = (req, res) => {
 //     const { id } = req.params;
 
-//     // SQL query to get project details along with the customer name
-//     const sql = `
-//         SELECT 
-//             p.*,        -- Get all project details
-//             cd.full_name AS customerName  -- Get customer full name
-//         FROM projects p
-//         JOIN customerdetails cd ON p.customer_id = cd.customer_id
-//         WHERE p.id = ?
-//     `;
-
-//     con.query(sql, [id], (err, result) => {
+//     const query = 'SELECT * FROM projects WHERE id = ?';
+//     con.query(query, [id], (err, result) => {
 //         if (err) {
 //             return res.status(500).json({ error: err.message });
 //         }
 //         if (result.length === 0) {
 //             return res.status(404).json({ error: 'Project not found' });
 //         }
-
-//         // Return the project details along with the customer name
-//         return res.status(200).json({
-//             Status: true,
-//             Project: result[0],  // Project details
-//             CustomerName: result[0].customerName  // Customer name
-//         });
+//         res.status(200).json(result[0]); // Return the project details
 //     });
 // };
+
+export const getProjectById = (req, res) => {
+    const { id } = req.params;
+
+    // SQL query to get project details along with the customer name
+    const sql = `
+        SELECT 
+            p.*,        -- Get all project details
+            cd.full_name AS customerName  -- Get customer full name
+        FROM projects p
+        JOIN customerdetails cd ON p.customer_id = cd.customer_id
+        WHERE p.id = ?
+    `;
+
+    con.query(sql, [id], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Project not found' });
+        }
+
+        // Return the project details along with the customer name
+        return res.status(200).json({
+            Status: true,
+            Project: result[0],  // Project details
+            CustomerName: result[0].customerName  // Customer name
+        });
+    });
+};
 
 
 // Delete Project Part

@@ -4,7 +4,7 @@ import { adminRouter } from "./Routes/AdminRoute.js";
 import { EmployeeRouter } from "./Routes/EmployeeRoute.js";
 import Jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
-import { getAllProjects , addProject, getAllProjectParts, getProjectPartsByProjectId, getProjectById, deleteProjectPart, addProjectPart, getProjectIds, getProjectPartById, updateProjectPartById} from "./Routes/projects/projectController.js";
+import { getAllProjects , addProject, getAllProjectParts, getProjectPartsByProjectId, getProjectById, deleteProjectPart, addProjectPart, getProjectIds, getProjectPartById, updateProjectPartById, updateProject} from "./Routes/projects/projectController.js";
 import { addCustomer,  deleteCustomerById, editCustomer, getAllCustomers, getCustomerById } from "./Routes/customer/customer.js";
 import { addDepartment, deleteDepartment, getAllDepartments, getAllEmployees, updateDepartment } from "./Routes/departments/departments.js";
 
@@ -41,6 +41,7 @@ app.get('/api/projects/:id', getProjectById);
 
 app.get('/projects',getAllProjects)
 app.post('/projects/add',addProject)
+app.put('/update_project/:id',updateProject)
 app.delete('/api/project_parts/:partId',deleteProjectPart)
 app.post('/add_projectpart/:id',addProjectPart)
 app.get('/get_projectpart/:partId',getProjectPartById)

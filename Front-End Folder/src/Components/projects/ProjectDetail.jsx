@@ -23,10 +23,10 @@ function ProjectDetail() {
           throw new Error("Failed to fetch project data");
         }
         const projectData = await response.json();
-        if (projectData) {
-          setProject(projectData); // Store project data
+        if (projectData.Status && projectData.Project) {
+          setProject(projectData.Project); // Store project data
         } else {
-          setError("Project Phases Not Decided Yet");
+          setError("Project not found.");
         }
 
         // Fetch project parts after loading the project details
@@ -54,6 +54,12 @@ function ProjectDetail() {
   // Handle project details form visibility
   const toggleProjectForm = () => setShowProjectModal(true); // Show the project details modal
   const handleCloseProjectModal = () => setShowProjectModal(false); // Hide the project details modal
+
+  // Update the project in the parent component after successful update
+  const handleProjectUpdate = (updatedProject) => {
+    setProject(updatedProject); // Update the project with the new details
+    setShowProjectModal(false); // Close the modal
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -85,6 +91,7 @@ function ProjectDetail() {
                   startDate: formatDateForInput(project.startDate),
                   expectedDate: formatDateForInput(project.expectedDate),
                 }} 
+                onUpdate={handleProjectUpdate}  // Pass the callback to update the project
               />
             </Modal.Body>
             <Modal.Footer>

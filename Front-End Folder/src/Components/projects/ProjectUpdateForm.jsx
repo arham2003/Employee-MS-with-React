@@ -1,10 +1,14 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 function ProjectUpdateForm({ project }) {
   const [updatedProject, setUpdatedProject] = useState({
-    ...project,
+    id: project.id,
+    projectName: project.projectName || "",
     startDate: project.startDate || "",
     expectedDate: project.expectedDate || "",
+    budget: project.budget || "",
+    status: project.status || "",
   });
 
   // Handle input changes
@@ -17,10 +21,37 @@ function ProjectUpdateForm({ project }) {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you can make a request to update the project data
-    console.log("Updated Project:", updatedProject);
+
+    const { id, projectName, startDate, expectedDate, budget, status } = updatedProject;
+
+    if (!id || !projectName || !startDate || !expectedDate || !budget || !status) {
+      alert("All fields are required");
+      return;
+    }
+
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/update_project/${id}`,
+        {
+          id,
+          projectName,
+          startDate,
+          expectedDate,
+          budget,
+          status,
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("Project updated successfully");
+        // Alert when the project is successfully updated
+        alert("Project updated successfully!");
+      }
+    } catch (error) {
+      console.error("Error updating project:", error.response?.data || error.message);
+    }
   };
 
   return (
@@ -31,17 +62,6 @@ function ProjectUpdateForm({ project }) {
           type="text"
           name="projectName"
           value={updatedProject.projectName || ""}
-          onChange={handleChange}
-          className="form-control"
-          required
-        />
-      </div>
-      <div className="form-group">
-        <label>Customer Name</label>
-        <input
-          type="text"
-          name="customerName"
-          value={updatedProject.customerName || ""}
           onChange={handleChange}
           className="form-control"
           required
