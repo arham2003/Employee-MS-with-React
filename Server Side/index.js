@@ -4,7 +4,7 @@ import { adminRouter } from "./Routes/AdminRoute.js";
 import { EmployeeRouter } from "./Routes/EmployeeRoute.js";
 import Jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
-import { getAllProjects , addProject, getAllProjectParts, getProjectPartsByProjectId, getProjectById, deleteProjectPart, addProjectPart, getProjectIds, getProjectPartById, updateProjectPartById, updateProject} from "./Routes/projects/projectController.js";
+import { getAllProjects , addProject, getAllProjectParts, getProjectPartsByProjectId, getProjectById, deleteProjectPart, addProjectPart, getProjectIds, getProjectPartById, updateProjectPartById, updateProject, deleteProject} from "./Routes/projects/projectController.js";
 import { addCustomer,  deleteCustomerById, editCustomer, getAllCustomers, getCustomerById } from "./Routes/customer/customer.js";
 import { addDepartment, deleteDepartment, getAllDepartments, getAllEmployees, updateDepartment } from "./Routes/departments/departments.js";
 
@@ -61,6 +61,8 @@ app.get('/get_all_departments',getAllDepartments)
 app.post('/add_department',addDepartment)
 app.delete('/delete_department/:departmentId', deleteDepartment);
 app.put('/update_department/:id',updateDepartment)
+
+app.delete('/projects/:projectId', deleteProject);
 
 app.get('/verify',verifyUser, (req, res)=> {
     return res.json({Status: true, role: req.role, id: req.id})

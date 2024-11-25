@@ -72,9 +72,6 @@ export const addProject = (req, res) => {
   
   
 
-  
-
-
 
 
 //  project details apis
@@ -89,6 +86,8 @@ export const getAllProjectParts = (req, res) => {
         res.status(200).json(results);
     });
 };
+
+
 
 // Function to get project parts for a specific project
 export const getProjectPartsByProjectId = (req, res) => {
@@ -327,4 +326,52 @@ export const getProjectIds = (req, res) => {
     });
 };
 
+
+// Delete Project and its related project parts
+export const deleteProject = (req, res) => {
+    const { projectId } = req.params;
+  
+    // Begin a transaction to ensure data integrity
+    con.beginTransaction((err) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+  
+      // First, delete all related project parts
+      const deletePartsQuery = 'DELETE FROM project_parts WHERE project_id = ?';
+      con.query(deletePartsQuery, [projectId], (err) => {
+        if (err) {
+          return con.rollback(() => {
+            return res.status(500).json({ error: err.message });
+          });
+        }
+  
+        // Then, delete the project
+        const deleteProjectQuery = 'DELETE FROM projects WHERE id = ?';
+        con.query(deleteProjectQuery, [projectId], (err, result) => {
+          if (err) {
+            return con.rollback(() => {
+              return res.status(500).json({ error: err.message });
+            });
+          }
+  
+          // If no project was deleted, return an error
+          if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Project not found' });
+          }
+  
+          // Commit the transaction
+          con.commit((err) => {
+            if (err) {
+              return con.rollback(() => {
+                return res.status(500).json({ error: err.message });
+              });
+            }
+  
+            res.status(200).json({ message: 'Project and related parts deleted successfully' });
+          });
+        });
+      });
+    });
+  };
 

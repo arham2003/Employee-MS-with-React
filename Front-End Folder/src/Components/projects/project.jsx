@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Project.css';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';  // Import Toastify CSS
+
 
 function Projects() {
   const [projects, setProjects] = useState([]);
@@ -20,6 +23,30 @@ function Projects() {
     fetchProjects();
   }, []);
 
+  // Delete project and its related parts
+  const handleDelete = async (projectId) => {
+    // Show a confirmation message using Toastify
+    const confirmDelete = window.confirm('Are you sure you want to delete this project and all its related parts?');
+    if (confirmDelete) {
+      try {
+        const response = await fetch(`http://localhost:3000/projects/${projectId}`, {
+          method: 'DELETE',
+        });
+
+        if (response.ok) {
+          // Remove the deleted project from the state
+          setProjects((prevProjects) => prevProjects.filter(project => project.id !== projectId));
+          toast.success('Project and related parts deleted successfully!');
+        } else {
+          toast.error('Error deleting project.');
+        }
+      } catch (error) {
+        toast.error('Error deleting project.');
+        console.error('Error deleting project:', error);
+      }
+    }
+  };
+  
   return (
     <div>
       <div className="projects-container">
@@ -29,7 +56,7 @@ function Projects() {
         <Link to="/dashboard/projectForm" className="btn btn-success">
           Add Project
         </Link>
-        <Link to="/dashboard/project_phase" className="btn btn-success">
+        <Link to="/dashboard/project_phase" className="btn btn-success ms-2">
           Add Phase
         </Link>
 
@@ -42,7 +69,13 @@ function Projects() {
                   <p className="card-text">Start Date: {new Date(project.startDate).toLocaleDateString()}</p>
                   <p className="card-text">Status: {project.status}</p>
                   <Link to={`/dashboard/project/${project.id}`} className="btn btn-success">View Details</Link>
-                </div>
+                  <button
+                    className="btn btn-danger ms-2"
+                    onClick={() => handleDelete(project.id)}
+                  >
+                    Delete
+                  </button>
+                </div>  
               </div>
             </div>
           ))}
