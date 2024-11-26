@@ -5,6 +5,7 @@ const AttendanceRecords = () => {
     const [employees, setEmployees] = useState([]); // Store employee data
     const [month, setMonth] = useState(''); // Store selected month
     const [attendanceRecords, setAttendanceRecords] = useState([]); // Store attendance records
+    const [dates, setDates] = useState([]); // Store dates of the month
     const [loading, setLoading] = useState(false); // Loading state
     const [error, setError] = useState(null); // Error state
 
@@ -24,6 +25,20 @@ const AttendanceRecords = () => {
             });
     }, []);
 
+    // Function to generate all dates of the selected month
+    const generateDatesForMonth = (month) => {
+        const date = new Date(`${month}-01`);
+        const daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+        const dateArray = [];
+
+        for (let i = 1; i <= daysInMonth; i++) {
+            const day = `${month}-${i.toString().padStart(2, '0')}`;
+            dateArray.push(day);
+        }
+
+        return dateArray;
+    };
+
     // Fetch attendance records for a specific month
     const fetchAttendanceRecords = () => {
         if (!month) {
@@ -35,11 +50,12 @@ const AttendanceRecords = () => {
         setError(null);
 
         // Make a request to get attendance records for the selected month
-        axios.get('http://localhost:3000/get_attendanceByMonth?month=2024-11')
+        axios.get(`http://localhost:3000/get_attendanceByMonth?month=${month}`)
         // Adjust the URL to match your backend
             .then((response) => {
                 if (response.status === 200) {
                     setAttendanceRecords(response.data); // Set attendance records
+                    setDates(generateDatesForMonth(month)); // Generate and set the dates for the selected month
                 } else {
                     setError('No attendance records found for the selected month.');
                 }
@@ -82,21 +98,29 @@ const AttendanceRecords = () => {
                     <thead>
                         <tr>
                             <th>Employee Name</th>
-                            <th>Date</th>
-                            <th>Attendance Status</th>
+                            {dates.map((date) => (
+                                <th key={date}>{date}</th>
+                            ))}
                         </tr>
                     </thead>
                     <tbody>
-                        {attendanceRecords.map((record) => {
-                            const employee = employees.find((emp) => emp.id === record.employeeId);
-                            return (
-                                <tr key={`${record.employeeId}-${record.date}`}>
-                                    <td>{employee ? employee.name : 'Unknown Employee'}</td>
-                                    <td>{record.date}</td>
-                                    <td>{record.status}</td>
-                                </tr>
-                            );
-                        })}
+                        {employees.map((employee) => (
+                            <tr key={employee.id}>
+                                <td>{employee.name}</td>
+                                {dates.map((date) => {
+                                    const record = attendanceRecords.find(
+                                        (rec) =>
+                                            rec.employee_id === employee.id && 
+                                            new Date(rec.date).toISOString().split('T')[0] === date // Compare only the date part
+                                    );
+                                    return (
+                                        <td key={`${employee.id}-${date}`}>
+                                            {record ? record.status : '-'}
+                                        </td>
+                                    );
+                                })}
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             )}
