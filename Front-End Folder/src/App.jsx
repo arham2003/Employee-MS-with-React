@@ -26,6 +26,8 @@ import Departments from './Components/Departments/Departments'
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AttendanceForm from './Components/Attendance/AttendanceForm'
+import AttendanceRecords from './Components/Attendance/AttendanceRecords'
 
 function App() {
   return (
@@ -46,7 +48,7 @@ function App() {
           <Route path="/dashboard/customer" element={<Customer />}></Route>
 
           <Route path="/dashboard/departments" element={<Departments />}></Route>
-          <Route path="/dashboard/attendance" element={< Attendance/>}></Route>
+          <Route path="/dashboard/attendance" element={< AttendanceRecords/>}></Route>
 
           <Route path="/dashboard/profile" element={<Profile />}></Route>
           

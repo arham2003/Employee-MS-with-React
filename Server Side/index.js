@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import { getAllProjects , addProject, getAllProjectParts, getProjectPartsByProjectId, getProjectById, deleteProjectPart, addProjectPart, getProjectIds, getProjectPartById, updateProjectPartById, updateProject, deleteProject} from "./Routes/projects/projectController.js";
 import { addCustomer,  deleteCustomerById, editCustomer, getAllCustomers, getCustomerById } from "./Routes/customer/customer.js";
 import { addDepartment, deleteDepartment, getAllDepartments, getAllEmployees, updateDepartment } from "./Routes/departments/departments.js";
+import { getAttendanceByDate, getAttendanceByMonth, submitAttendance } from "./Routes/attendance/attendance.js";
 
 const app = express() 
 app.use(cors({
@@ -61,8 +62,13 @@ app.get('/get_all_departments',getAllDepartments)
 app.post('/add_department',addDepartment)
 app.delete('/delete_department/:departmentId', deleteDepartment);
 app.put('/update_department/:id',updateDepartment)
-
 app.delete('/projects/:projectId', deleteProject);
+
+// Attendance
+app.post('/submit_attendance',submitAttendance)
+app.get('/get_attendanceByDate',getAttendanceByDate)
+app.get('/get_attendanceByMonth',getAttendanceByMonth)
+
 
 app.get('/verify',verifyUser, (req, res)=> {
     return res.json({Status: true, role: req.role, id: req.id})
