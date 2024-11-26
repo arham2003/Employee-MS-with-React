@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 
 const AttendanceRecords = () => {
     const [employees, setEmployees] = useState([]); // Store employee data
@@ -8,6 +9,7 @@ const AttendanceRecords = () => {
     const [dates, setDates] = useState([]); // Store dates of the month
     const [loading, setLoading] = useState(false); // Loading state
     const [error, setError] = useState(null); // Error state
+    const navigate = useNavigate(); // Initialize useNavigate hook
 
     // Fetch employee data on component mount
     useEffect(() => {
@@ -45,13 +47,12 @@ const AttendanceRecords = () => {
             alert('Please select a month.');
             return;
         }
-
+        console.log(month)
         setLoading(true);
         setError(null);
 
         // Make a request to get attendance records for the selected month
         axios.get(`http://localhost:3000/get_attendanceByMonth?month=${month}`)
-        // Adjust the URL to match your backend
             .then((response) => {
                 if (response.status === 200) {
                     setAttendanceRecords(response.data); // Set attendance records
@@ -67,6 +68,11 @@ const AttendanceRecords = () => {
             .finally(() => {
                 setLoading(false); // Stop loading after data is fetched
             });
+    };
+
+    // Handle click for "Take Attendance" button to navigate to AttendanceForm
+    const handleTakeAttendanceClick = () => {
+        navigate('/dashboard/take_attendance'); // Navigate to the form page
     };
 
     return (
@@ -129,6 +135,11 @@ const AttendanceRecords = () => {
             {!loading && attendanceRecords.length === 0 && (
                 <div>No attendance records available for this month.</div>
             )}
+
+            {/* Button to take attendance */}
+            <button onClick={handleTakeAttendanceClick} className="take-attendance-btn">
+                Take Attendance
+            </button>
         </div>
     );
 };

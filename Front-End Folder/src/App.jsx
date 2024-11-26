@@ -49,6 +49,8 @@ function App() {
 
           <Route path="/dashboard/departments" element={<Departments />}></Route>
           <Route path="/dashboard/attendance" element={< AttendanceRecords/>}></Route>
+          <Route path="/dashboard/take_attendance" element={< AttendanceForm/>}></Route>
+
 
           <Route path="/dashboard/profile" element={<Profile />}></Route>
           

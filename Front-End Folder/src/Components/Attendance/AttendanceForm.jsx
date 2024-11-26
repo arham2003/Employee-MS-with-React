@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import './AttendanceForm.css'; // Import your professional CSS
 
 const AttendanceForm = () => {
@@ -8,6 +9,8 @@ const AttendanceForm = () => {
     const [attendanceData, setAttendanceData] = useState({}); // Store attendance status for employees
     const [loading, setLoading] = useState(true); // Loading state
     const [error, setError] = useState(null); // Error state
+
+    const navigate = useNavigate(); // Initialize navigate
 
     // Fetch employee data from API using Axios
     useEffect(() => {
@@ -131,6 +134,11 @@ const AttendanceForm = () => {
                 </table>
                 <button type="submit" className="submit-btn">Submit Attendance</button>
             </form>
+
+            {/* Back button to navigate to attendance records */}
+            <button onClick={() => navigate('/dashboard/attendance')} className="back-btn">
+                Go Back 
+            </button>
         </div>
     );
 };
