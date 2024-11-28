@@ -9,6 +9,7 @@ const AttendanceForm = () => {
     const [attendanceData, setAttendanceData] = useState({}); // Store attendance status for employees
     const [loading, setLoading] = useState(true); // Loading state
     const [error, setError] = useState(null); // Error state
+    const [maxDate, setMaxDate] = useState(''); // Maximum selectable date
 
     const navigate = useNavigate(); // Initialize navigate
 
@@ -31,6 +32,10 @@ const AttendanceForm = () => {
             .finally(() => {
                 setLoading(false); // Stop loading once data is fetched
             });
+
+        // Set the maxDate to today's date (YYYY-MM-DD)
+        const today = new Date().toISOString().split('T')[0];
+        setMaxDate(today);
     }, []); // Empty dependency array to fetch data only once on component mount
 
     // Handle changes in attendance dropdown
@@ -58,6 +63,7 @@ const AttendanceForm = () => {
                 status: attendanceData[employeeId],
             };
         });
+        console.log("Payload    ", attendancePayload)
 
         // Make API call to submit the attendance data
         axios
@@ -98,6 +104,7 @@ const AttendanceForm = () => {
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
                     required
+                    max={maxDate} // Restrict selection to current date or earlier
                 />
             </div>
 

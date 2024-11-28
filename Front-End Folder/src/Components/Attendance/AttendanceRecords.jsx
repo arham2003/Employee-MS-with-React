@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+// import './AttendanceRecords.css'
 
 const AttendanceRecords = () => {
     const [employees, setEmployees] = useState([]); // Store employee data
@@ -32,14 +33,16 @@ const AttendanceRecords = () => {
         const date = new Date(`${month}-01`);
         const daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
         const dateArray = [];
-
+    
         for (let i = 1; i <= daysInMonth; i++) {
-            const day = `${month}-${i.toString().padStart(2, '0')}`;
+            const day = new Date(date.getFullYear(), date.getMonth(), i)
+                .toISOString().split('T')[0]; // Format to YYYY-MM-DD
             dateArray.push(day);
         }
-
+    
         return dateArray;
     };
+    
 
     // Fetch attendance records for a specific month
     const fetchAttendanceRecords = () => {
@@ -50,6 +53,7 @@ const AttendanceRecords = () => {
         console.log(month)
         setLoading(true);
         setError(null);
+        console.log("Month",month)
 
         // Make a request to get attendance records for the selected month
         axios.get(`http://localhost:3000/get_attendanceByMonth?month=${month}`)
