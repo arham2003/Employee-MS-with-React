@@ -20,61 +20,64 @@ import ProjectForm from './Components/projects/ProjectForm'  // Add Project Form
 import ProjectDetail from './Components/projects/ProjectDetail'  // Project Details Page
 import ProjectPhaseForm from './Components/projects/ProjectPhaseForm'
 import Attendance from './Components/Attendance/Attendance'
-// import CustomerDetailForm from './Components/Customer/CustomerDetailsForm'
+import AttendanceForm from './Components/Attendance/AttendanceForm'
+import AttendanceRecords from './Components/Attendance/AttendanceRecords'
+import UpdateForm from './Components/Attendance/UpdateForm'
 import Customer from './Components/Customer/Customer'
 import Departments from './Components/Departments/Departments'
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AttendanceForm from './Components/Attendance/AttendanceForm'
-import AttendanceRecords from './Components/Attendance/AttendanceRecords'
-import UpdateForm from './Components/Attendance/UpdateForm'
+
+// Import your context
+import { EmployeeProvider } from './Components/EmployeePanel/EmployeeContext.jsx';  // Update this based on your actual context file location
+import AssignedWork from './Components/EmployeePanel/AssignedWork.jsx'
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Start />}></Route>
-        <Route path="/adminlogin" element={<Login />}></Route>
-        <Route path="/employee_login" element={<EmployeeLogin />}></Route>
-        <Route path="/employee_detail/:id" element={<EmployeeDetail />}></Route>
-        
-        <Route path="/dashboard" element={
-          <PrivateRoute>
-            <Dashboard />
-          </PrivateRoute>
-        }>
-          <Route path="" element={<Home />}></Route>
-          <Route path="/dashboard/employee" element={<Employee />}></Route>
-          <Route path="/dashboard/customer" element={<Customer />}></Route>
-
-          <Route path="/dashboard/departments" element={<Departments />}></Route>
-          <Route path="/dashboard/attendance" element={< AttendanceRecords/>}></Route>
-          <Route path="/dashboard/take_attendance" element={< AttendanceForm/>}></Route>
-          <Route path="/dashboard/update_attendance" element={< UpdateForm/>}></Route>
-
-
-
-          <Route path="/dashboard/profile" element={<Profile />}></Route>
-          
-          {/* List of Projects */}
-          <Route path="/dashboard/projects" element={<Projects />}></Route>
-          <Route path="/dashboard/project_phase" element={<ProjectPhaseForm />}></Route>
+    <EmployeeProvider> {/* Wrap the entire app with the EmployeeProvider */}
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Start />}></Route>
+          <Route path="/adminlogin" element={<Login />}></Route>
+          <Route path="/employee_login" element={<EmployeeLogin />}></Route>
+          <Route path="/employee_detail/:id" element={<EmployeeDetail />}></Route>
 
           
-          {/* Add New Project Form */}
-          <Route path="/dashboard/projectForm" element={<ProjectForm />}></Route>
-          
-          {/* Project Details by ID */}
-          <Route path="/dashboard/project/:id" element={<ProjectDetail />}></Route>
+          <Route path="/dashboard" element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }>
+            <Route path="" element={<Home />}></Route>
+            <Route path="/dashboard/employee" element={<Employee />}></Route>
+            <Route path="/dashboard/customer" element={<Customer />}></Route>
+            <Route path="/dashboard/departments" element={<Departments />}></Route>
+            <Route path="/dashboard/attendance" element={<AttendanceRecords />}></Route>
+            <Route path="/dashboard/take_attendance" element={<AttendanceForm />}></Route>
+            <Route path="/dashboard/update_attendance" element={<UpdateForm />}></Route>
+            <Route path="/dashboard/profile" element={<Profile />}></Route>
+            {/* <Route path="/employee_detail/assigned_work" element={<AssignedWork />}></Route> */}
 
-          <Route path="/dashboard/add_category" element={<AddCategory />}></Route>
-          <Route path="/dashboard/add_employee" element={<AddEmployee />}></Route>
-          <Route path="/dashboard/edit_employee/:id" element={<EditEmployee />}></Route>
-        </Route>
-      </Routes>
-      <ToastContainer/>
-    </BrowserRouter>
+
+            {/* List of Projects */}
+            <Route path="/dashboard/projects" element={<Projects />}></Route>
+            <Route path="/dashboard/project_phase" element={<ProjectPhaseForm />}></Route>
+
+            {/* Add New Project Form */}
+            <Route path="/dashboard/projectForm" element={<ProjectForm />}></Route>
+
+            {/* Project Details by ID */}
+            <Route path="/dashboard/project/:id" element={<ProjectDetail />}></Route>
+
+            <Route path="/dashboard/add_category" element={<AddCategory />}></Route>
+            <Route path="/dashboard/add_employee" element={<AddEmployee />}></Route>
+            <Route path="/dashboard/edit_employee/:id" element={<EditEmployee />}></Route>
+          </Route>
+        </Routes>
+        <ToastContainer />
+      </BrowserRouter>
+    </EmployeeProvider> 
   )
 }
 
