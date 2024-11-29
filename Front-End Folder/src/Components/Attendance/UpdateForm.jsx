@@ -1,27 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import './AttendanceForm.css';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const UpdateForm = () => {
     const [date, setDate] = useState('');
     const [attendanceData, setAttendanceData] = useState({});
     const [employees, setEmployees] = useState([]);
-    const [maxDate] = useState('2024-11-30'); // Set the max date to a fixed date
+    const [maxDate] = useState('2024-11-30');
+    const navigate = useNavigate();
 
-    // Fetch attendance data when the date is selected
     useEffect(() => {
-        if (!date) return; // Skip fetching if no date is selected
+        if (!date) return;
 
-        // Fetch attendance data for the selected date
         axios
             .get(`http://localhost:3000/get_attendanceByDate?date=${date}`)
             .then((response) => {
                 const data = response.data;
 
-                // Set employees data (name and status)
                 setEmployees(data);
-
-                // Map attendance data to employee names
                 setAttendanceData(
                     data.reduce((acc, record) => {
                         acc[record.name] = record.status;
@@ -35,7 +32,6 @@ const UpdateForm = () => {
             });
     }, [date]);
 
-    // Handle attendance changes
     const handleAttendanceChange = (employeeName, status) => {
         setAttendanceData((prevData) => ({
             ...prevData,
@@ -43,31 +39,41 @@ const UpdateForm = () => {
         }));
     };
 
-    // Handle form submission to update attendance
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Prepare the updated attendance data
         const updatedAttendance = employees.map((employee) => ({
             name: employee.name,
-            status: attendanceData[employee.name] || 'Absent', // Default to 'Absent' if not selected
+            status: attendanceData[employee.name] || 'Absent',
         }));
 
-        // Send the data to the backend
         axios
             .put('http://localhost:3000/update_attendance', { date, attendance: updatedAttendance })
             .then(() => {
-                alert('Attendance submitted successfully!');
-                // Optionally, fetch updated attendance again or redirect
+                alert('Attendance Updated successfully!');
             })
             .catch((error) => {
                 console.error('Error updating attendance:', error);
                 alert('Failed to submit attendance. Please try again.');
             });
 
-        // Reset form after submission
         setDate('');
         setAttendanceData({});
+    };
+
+    const handleDeleteAttendance = () => {
+        axios
+            .delete('http://localhost:3000/delete_attendance', { data: { date } })
+            .then((response) => {
+                alert('Attendance records deleted successfully!');
+                setDate('');
+                setEmployees([]);
+                setAttendanceData({});
+            })
+            .catch((error) => {
+                console.error('Error deleting attendance:', error);
+                alert('Failed to delete attendance records. Please try again.');
+            });
     };
 
     return (
@@ -120,16 +126,21 @@ const UpdateForm = () => {
                             ))}
                         </tbody>
                     </table>
-                    <button type="submit" className="submit-btn">Submit Attendance</button>
+                    <button type="submit" className="submit-btn">Update Attendance</button>
                 </form>
             ) : (
                 <p>Select a date to view and update attendance records.</p>
             )}
 
-            {/* Back button */}
-            <button onClick={() => alert('Back button clicked (UI-only)')} className="back-btn">
-                Go Back
-            </button>
+            {/* Buttons Wrapper */}
+            <div className="button-wrapper">
+                <button onClick={handleDeleteAttendance} className="delete-btn">
+                    Delete Attendance for Selected Date
+                </button>
+                <button onClick={() => navigate('/dashboard/attendance')} className="back-btn">
+                    Go Back
+                </button>
+            </div>
         </div>
     );
 };

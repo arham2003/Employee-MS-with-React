@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
-// import './AttendanceRecords.css'
+import './AttendanceRecords.css'
 
 const AttendanceRecords = () => {
     const [employees, setEmployees] = useState([]); // Store employee data

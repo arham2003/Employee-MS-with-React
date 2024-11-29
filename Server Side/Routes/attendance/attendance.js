@@ -139,3 +139,28 @@ export const updateAttendance = (req, res) => {
         });
 };
 
+export const deleteAttendance = (req, res) => {
+    const { date } = req.body;  // Extract the date from the request body
+
+    // Validate the date is provided
+    if (!date) {
+        return res.status(400).json({ error: 'Date is required.' });
+    }
+
+    // Query to delete the attendance records for the specified date
+    const query = 'DELETE FROM attendance WHERE date = ?';
+
+    con.query(query, [date], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+
+        // Check if any records were deleted
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ message: 'No attendance records found for the selected date.' });
+        }
+
+        // If successful, send a response indicating the records were deleted
+        res.status(200).json({ message: 'Attendance records deleted successfully.' });
+    });
+};
