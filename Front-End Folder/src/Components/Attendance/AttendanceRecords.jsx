@@ -78,6 +78,9 @@ const AttendanceRecords = () => {
     const handleTakeAttendanceClick = () => {
         navigate('/dashboard/take_attendance'); // Navigate to the form page
     };
+    const handleUpdateAttendanceClick = () => {
+        navigate('/dashboard/update_attendance'); // Navigate to the form page
+    };
 
     return (
         <div className="attendance-records">
@@ -143,6 +146,10 @@ const AttendanceRecords = () => {
             {/* Button to take attendance */}
             <button onClick={handleTakeAttendanceClick} className="take-attendance-btn">
                 Take Attendance
+            </button>
+            {/* Button to take attendance */}
+            <button onClick={handleUpdateAttendanceClick} className="take-attendance-btn">
+                Update Attendance
             </button>
         </div>
     );

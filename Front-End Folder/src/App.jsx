@@ -28,6 +28,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AttendanceForm from './Components/Attendance/AttendanceForm'
 import AttendanceRecords from './Components/Attendance/AttendanceRecords'
+import UpdateForm from './Components/Attendance/UpdateForm'
 
 function App() {
   return (
@@ -50,6 +51,8 @@ function App() {
           <Route path="/dashboard/departments" element={<Departments />}></Route>
           <Route path="/dashboard/attendance" element={< AttendanceRecords/>}></Route>
           <Route path="/dashboard/take_attendance" element={< AttendanceForm/>}></Route>
+          <Route path="/dashboard/update_attendance" element={< UpdateForm/>}></Route>
+
 
 
           <Route path="/dashboard/profile" element={<Profile />}></Route>

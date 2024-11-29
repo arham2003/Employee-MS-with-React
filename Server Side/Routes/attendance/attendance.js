@@ -32,32 +32,42 @@ export const submitAttendance = (req, res) => {
     res.status(201).json({ message: 'Attendance submitted successfully' });
 };
 
+
+
 export const getAttendanceByDate = (req, res) => {
-    const { date } = req.query; // Extract the date from the query parameters
+    const { date } = req.query; // Extract the full date (YYYY-MM-DD) from the query parameter
 
-    // Query to fetch attendance records for the specified date
+    // Check if date is provided
+    if (!date) {
+        return res.status(400).json({ error: 'Date parameter (YYYY-MM-DD) is required' });
+    }
+
+    // SQL query to join employee and attendance tables, and filter by the provided date
     const query = `
-        SELECT a.employeeId, e.name, a.status
+        SELECT a.id AS attendance_id, e.name, a.status
         FROM attendance a
-        JOIN employees e ON a.employeeId = e.id
-        WHERE a.date = ?
-    `;
+        JOIN employee e ON a.employee_id = e.id
+        WHERE DATE(a.date) = ?;
+    `; // Query to get attendance ID, employee name, and attendance status for the specific date
 
-    // Execute the query with the provided date
+    // Execute the query
     con.query(query, [date], (err, results) => {
         if (err) {
-            return res.status(500).json({ error: err.message });
+            return res.status(500).json({ error: err.message }); // If there is an error, return it
         }
 
-        // If no records are found, send a message indicating no records
         if (results.length === 0) {
-            return res.status(404).json({ message: 'No attendance records found for the selected date.' });
+            return res.status(404).json({ message: 'No attendance records found for the specified date' });
         }
 
-        // Return the attendance records
-        res.status(200).json(results);
+        return res.status(200).json(results); // Send the attendance data as a JSON response
     });
 };
+
+
+
+
+
 
 
 export const getAttendanceByMonth = (req, res) => {
@@ -87,5 +97,45 @@ export const getAttendanceByMonth = (req, res) => {
 
         return res.status(200).json(results); // Send the attendance data as a JSON response
     });
+};
+
+export const updateAttendance = (req, res) => {
+    const { date, attendance } = req.body;
+
+    // Check if date and attendance data are provided
+    if (!date || !attendance || !Array.isArray(attendance)) {
+        return res.status(400).json({ error: 'Date and valid attendance data are required' });
+    }
+
+    // Create an array of update queries for each employee's attendance record
+    const updateQueries = attendance.map(({ name, status }) => {
+        return new Promise((resolve, reject) => {
+            const query = `
+                UPDATE attendance 
+                SET status = ? 
+                WHERE employee_id = (
+                    SELECT id FROM employee WHERE name = ?
+                ) AND DATE(date) = ?;
+            `;
+
+            // Execute the SQL query with status, employee name, and date
+            con.query(query, [status, name, date], (err, result) => {
+                if (err) {
+                    return reject(err); // Reject the promise on error
+                }
+                resolve(result); // Resolve the promise on success
+            });
+        });
+    });
+
+    // Execute all update queries asynchronously
+    Promise.all(updateQueries)
+        .then(() => {
+            res.status(200).json({ message: 'Attendance updated successfully!' });
+        })
+        .catch((err) => {
+            console.error('Error updating attendance:', err);
+            res.status(500).json({ error: 'Failed to update attendance' });
+        });
 };
 
