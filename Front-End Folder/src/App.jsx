@@ -5,9 +5,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Dashboard from './Components/Dashboard'
 import Home from './Components/Home'
 import Employee from './Components/Employee'
-import Category from './Components/Category'
 import Profile from './Components/Profile'
-import AddCategory from './Components/AddCategory'
 import AddEmployee from './Components/AddEmployee'
 import EditEmployee from './Components/EditEmployee'
 import Start from './Components/Start'
@@ -70,7 +68,6 @@ function App() {
             {/* Project Details by ID */}
             <Route path="/dashboard/project/:id" element={<ProjectDetail />}></Route>
 
-            <Route path="/dashboard/add_category" element={<AddCategory />}></Route>
             <Route path="/dashboard/add_employee" element={<AddEmployee />}></Route>
             <Route path="/dashboard/edit_employee/:id" element={<EditEmployee />}></Route>
           </Route>
