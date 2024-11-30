@@ -13,6 +13,9 @@ const AssignedWork = () => {
   const [partDetails, setPartDetails] = useState(null); // State to hold project part details
 
   useEffect(() => {
+    const currentDate = new Date().toISOString().split('T')[0];
+console.log(currentDate); // Output: 2024-11-28
+
     // Fetch assigned work data when the component mounts
     axios.get(`http://localhost:3000/employee_detail/${id}/assigned_work`)
       .then((response) => {
@@ -45,7 +48,24 @@ const AssignedWork = () => {
         setError("Error fetching project part details.");
       });
   };
-
+  const markAttendance = () => {
+    const currentDate = new Date().toISOString().split('T')[0];
+    console.log("In markAttendance");
+    console.log("Current Date:", currentDate);
+  
+    axios.post(`http://localhost:3000/mark_present/37?date=${currentDate}`)
+      .then((response) => {
+        console.log("Response:", response); // Log response
+        alert('Attendance marked as present!');
+      })
+      .catch((error) => {
+        console.error("Error marking attendance:", error); // Log error details
+        alert('Error marking attendance');
+      });
+  
+    console.log("Out markAttendance");
+  };
+  
   // Handle the "Add Work" button click
   const handleAddWork = (partId) => {
     setSelectedPartId(partId); // Set selected part ID for the file upload
@@ -71,8 +91,6 @@ const AssignedWork = () => {
       submission_url: url, // Use the URL instead of a file
       submission_datetime: new Date().toISOString(), // Use current datetime
     };
-    
-    console.log("PartId", selectedPartId)
 
     // First, submit the URL to the backend
     axios.post('http://localhost:3000/submit_work', data)
@@ -86,6 +104,12 @@ const AssignedWork = () => {
               if (updateResponse.data.Status) {
                 alert('Status updated to Submitted');
                 setIsModalOpen(false); // Close the modal after successful update
+
+                console.log("ID = ",id)
+                
+                // Mark employee as present after submission
+                // const currentDate = new Date().toISOString().split('T')[0]; // Get the current date in YYYY-MM-DD format
+                
               } else {
                 alert('Failed to update status');
               }
@@ -94,6 +118,7 @@ const AssignedWork = () => {
               console.error('Error updating status:', error);
               alert('Error updating status');
             });
+            markAttendance()
         } else {
           alert('Failed to submit URL');
         }
@@ -104,6 +129,9 @@ const AssignedWork = () => {
         alert('Error submitting URL');
         setIsModalOpen(false); // Close the modal after error
       });
+
+      console.log("ID = ",id)
+      
   };
 
   // Render a loading message while the data is being fetched

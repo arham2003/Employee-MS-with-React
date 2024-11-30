@@ -67,19 +67,19 @@
   }
   .attendance-summary {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     margin-bottom: 20px;
-  }
-  
-  .summary-box {
-    background-color: #f0f0f0;
     padding: 10px;
     border: 1px solid #ddd;
-    width: 22%;
-    text-align: center;
+    border-radius: 5px;
+    background-color: #f8f9fa;
   }
   
-  .summary-box strong {
+  .attendance-summary-item {
     font-size: 1.1em;
+  }
+  
+  .attendance-summary-item strong {
+    color: #343a40;
   }
   

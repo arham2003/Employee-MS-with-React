@@ -9,7 +9,7 @@ import { addCustomer,  deleteCustomerById, editCustomer, getAllCustomers, getCus
 import { addDepartment, deleteDepartment, getAllDepartments, getAllEmployees, updateDepartment } from "./Routes/departments/departments.js";
 import { deleteAttendance, getAttendanceByDate, getAttendanceByEmpIdAndDate, getAttendanceByMonth, submitAttendance, updateAttendance } from "./Routes/attendance/attendance.js";
 import { addSubmission, getEmployeeProjectParts, updateProjectPartStatusById } from "./Routes/EmployeePanel/AssignedWork.js";
-import { getEmployeeAttendance } from "./Routes/EmployeePanel/EmpAttendance.js";
+import { getEmployeeAttendance, markAttendanceAsPresent } from "./Routes/EmployeePanel/EmpAttendance.js";
 
 const app = express() 
 app.use(cors({
@@ -80,6 +80,7 @@ app.post('/submit_work',addSubmission)
 app.put('/update_projectPart_status/:partId', updateProjectPartStatusById);
 app.get('/get_empAttendance/:id', getAttendanceByEmpIdAndDate);
 app.get('/get_empAttendance_count/:employeeId', getEmployeeAttendance); // New route for employee attendance
+app.post('/mark_present/:employeeId',markAttendanceAsPresent)
 
 
 app.get('/verify',verifyUser, (req, res)=> {

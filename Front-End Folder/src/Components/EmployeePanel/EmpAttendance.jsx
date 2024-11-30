@@ -1,41 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import './EmpAttendance.css'
+import './EmpAttendance.css';
 
 const EmpAttendance = () => {
   const { employeeId } = useParams();  // Get employee ID from URL params
   const [attendanceData, setAttendanceData] = useState([]);
-  const [attendanceSummary, setAttendanceSummary] = useState({
-    totalAbsent: 0,
-    totalPresent: 0,
-    totalLeave: 0,
-    totalLate: 0
+  const [attendanceCount, setAttendanceCount] = useState({
+    total_absent: 0,
+    total_present: 0,
+    total_leave: 0,
+    total_late: 0
   });
   const [loading, setLoading] = useState(true);
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1); // Default to current month
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());  // Default to current year
+  const [workAdded, setWorkAdded] = useState(false); // Flag for new work
   const navigate = useNavigate();
 
   useEffect(() => {
+    setLoading(true);
+
     // Fetch attendance data based on employeeId, month, and year
-    axios.get(`http://localhost:3000/get_empAttendance_count/${employeeId}?month=${selectedMonth}&year=${selectedYear}`)
+    axios.get(`http://localhost:3000/get_empAttendance/${employeeId}?month=${selectedMonth}&year=${selectedYear}`)
       .then((response) => {
-        const data = response.data.Result[0]; // Assuming data is an array of one object
-        setAttendanceSummary({
-          totalAbsent: data.total_absent,
-          totalPresent: data.total_present,
-          totalLeave: data.total_leave,
-          totalLate: data.total_late
-        });
-        setAttendanceData(response.data.Result); // You can keep this if you need raw data as well
-        setLoading(false);
+        setAttendanceData(response.data);
       })
       .catch((error) => {
         console.error("Error fetching attendance data:", error);
+      });
+
+    // Fetch attendance count based on employeeId, month, and year
+    axios.get(`http://localhost:3000/get_empAttendance_count/${employeeId}?month=${selectedMonth}&year=${selectedYear}`)
+      .then((response) => {
+        setAttendanceCount(response.data.Result[0]);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching attendance count:", error);
         setLoading(false);
       });
-  }, [employeeId, selectedMonth, selectedYear]);
+  }, [employeeId, selectedMonth, selectedYear, workAdded]);  // Re-run when workAdded is changed
 
   const handleMonthChange = (event) => {
     setSelectedMonth(event.target.value);
@@ -62,6 +67,20 @@ const EmpAttendance = () => {
 
   const allDays = generateDaysInMonth(selectedMonth, selectedYear);
 
+  // Function to mark attendance as present
+  const markAttendance = (date) => {
+    const formattedDate = `${selectedYear}-${selectedMonth.toString().padStart(2, '0')}-${date.toString().padStart(2, '0')}`;
+    
+    axios.post(`http://localhost:3000/mark_present/${employeeId}?date=${formattedDate}`)
+      .then((response) => {
+        console.log("Attendance marked as present:", response.data);
+        setWorkAdded(true); // Mark that work has been added
+      })
+      .catch((error) => {
+        console.error("Error marking attendance:", error);
+      });
+  };
+
   if (loading) {
     return <div>Loading attendance data...</div>;
   }
@@ -85,19 +104,19 @@ const EmpAttendance = () => {
           <div className="attendance-container">
             <h3>Attendance Records</h3>
 
-            {/* Attendance summary box */}
+            {/* Attendance Summary */}
             <div className="attendance-summary">
-              <div className="summary-box">
-                <strong>Total Absent:</strong> {attendanceSummary.totalAbsent}
+              <div className="attendance-summary-item">
+                <strong>Absent:</strong> {attendanceCount.total_absent}
               </div>
-              <div className="summary-box">
-                <strong>Total Present:</strong> {attendanceSummary.totalPresent}
+              <div className="attendance-summary-item">
+                <strong>Present:</strong> {attendanceCount.total_present}
               </div>
-              <div className="summary-box">
-                <strong>Total Leave:</strong> {attendanceSummary.totalLeave}
+              <div className="attendance-summary-item">
+                <strong>Leave:</strong> {attendanceCount.total_leave}
               </div>
-              <div className="summary-box">
-                <strong>Total Late:</strong> {attendanceSummary.totalLate}
+              <div className="attendance-summary-item">
+                <strong>Late:</strong> {attendanceCount.total_late}
               </div>
             </div>
 
@@ -130,12 +149,13 @@ const EmpAttendance = () => {
               </label>
             </div>
 
-            {/* Attendance Data Table */}
+            {/* Display days and mark present */}
             <table className="table">
               <thead>
                 <tr>
                   <th>Date</th>
                   <th>Status</th>
+                  <th>Mark Present</th>
                 </tr>
               </thead>
               <tbody>
@@ -143,6 +163,11 @@ const EmpAttendance = () => {
                   <tr key={day}>
                     <td>{day}</td>
                     <td>{attendanceMap[day] || '-'}</td> {/* Show status or dash if no record */}
+                    <td>
+                      {/* {attendanceMap[day] !== 'Present' && (
+                        <button onClick={() => markAttendance(day)}>Mark Present</button>
+                      )} */}
+                    </td>
                   </tr>
                 ))}
               </tbody>
