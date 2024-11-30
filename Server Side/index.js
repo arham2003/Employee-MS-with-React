@@ -10,6 +10,7 @@ import { addDepartment, deleteDepartment, getAllDepartments, getAllEmployees, up
 import { deleteAttendance, getAttendanceByDate, getAttendanceByEmpIdAndDate, getAttendanceByMonth, submitAttendance, updateAttendance } from "./Routes/attendance/attendance.js";
 import { addSubmission, getEmployeeProjectParts, updateProjectPartStatusById } from "./Routes/EmployeePanel/AssignedWork.js";
 import { getEmployeeAttendance, markAttendanceAsPresent } from "./Routes/EmployeePanel/EmpAttendance.js";
+import { checkPaymentStatus, getEmployeePayments, getEmployeeSalaries, getPayments, paySalary } from "./Routes/Salaries/salaries.js";
 
 const app = express() 
 app.use(cors({
@@ -81,6 +82,15 @@ app.put('/update_projectPart_status/:partId', updateProjectPartStatusById);
 app.get('/get_empAttendance/:id', getAttendanceByEmpIdAndDate);
 app.get('/get_empAttendance_count/:employeeId', getEmployeeAttendance); // New route for employee attendance
 app.post('/mark_present/:employeeId',markAttendanceAsPresent)
+
+//  Salaries
+app.get('/get_employee_salaries',getEmployeeSalaries)
+app.post('/pay_salary', paySalary); // Endpoint to submit salary data
+app.get('/get_payments', getPayments); // Endpoint to get all payment records
+app.get('/check_payment_status',checkPaymentStatus)
+app.get('/get_empPayments',getEmployeePayments)
+
+
 
 
 app.get('/verify',verifyUser, (req, res)=> {

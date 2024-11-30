@@ -1,0 +1,95 @@
+/* SalaryForm.css */
+
+/* Container for the form */
+.salary-form-container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    max-width: 600px;
+    width: 100%;
+    margin: 40px auto;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Heading */
+  .salary-form-container h2 {
+    text-align: center;
+    color: #333;
+    font-size: 26px;
+    margin-bottom: 20px;
+  }
+  
+  /* Form styling */
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  form div {
+    margin-bottom: 15px;
+  }
+  
+  /* Labels */
+  label {
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  
+  /* Input fields */
+  input[type="text"],
+  input[type="number"],
+  input[type="month"],
+  select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    font-size: 16px;
+    margin-top: 5px;
+  }
+  
+  /* Input focus effect */
+  input:focus, select:focus {
+    border-color: #4caf50;
+    outline: none;
+  }
+  
+  /* Button styles */
+  button {
+    background-color: #4caf50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Error/Success messages */
+  .message {
+    text-align: center;
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .message.success {
+    background-color: #dff0d8;
+    color: #3c763d;
+  }
+  
+  .message.error {
+    background-color: #f2dede;
+    color: #a94442;
+  }
+  

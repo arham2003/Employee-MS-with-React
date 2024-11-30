@@ -31,6 +31,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { EmployeeProvider } from './Components/EmployeePanel/EmployeeContext';
 import AssignedWork from './Components/EmployeePanel/AssignedWork';
 import EmpAttendance from './Components/EmployeePanel/EmpAttendance';
+import SalaryTracker from './Components/Salaries/Salaries';
 
 function App() {
   return (
@@ -70,6 +71,8 @@ function App() {
             <Route path="/dashboard/add_category" element={<AddCategory />}></Route>
             <Route path="/dashboard/add_employee" element={<AddEmployee />}></Route>
             <Route path="/dashboard/edit_employee/:id" element={<EditEmployee />}></Route>
+            <Route path="/dashboard/salaries" element={<SalaryTracker />}></Route>
+
           </Route>
         </Routes>
         <ToastContainer />

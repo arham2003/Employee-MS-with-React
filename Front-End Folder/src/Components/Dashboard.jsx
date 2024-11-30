@@ -4,17 +4,16 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import axios from "axios";
 
 const Dashboard = () => {
-  const anvigate = useNavigate()
-  axios.defaults.withCredentials = true
+  const anvigate = useNavigate();
+  axios.defaults.withCredentials = true;
   const handleLogout = () => {
-    axios.get('http://localhost:3000/auth/logout')
-    .then(result => {
-      if(result.data.Status) { 
-        localStorage.removeItem("valid")
-        anvigate('/')
+    axios.get("http://localhost:3000/auth/logout").then((result) => {
+      if (result.data.Status) {
+        localStorage.removeItem("valid");
+        anvigate("/");
       }
-    })
-  }
+    });
+  };
   return (
     <div className="container-fluid">
       <div className="row flex-nowrap">
@@ -72,7 +71,7 @@ const Dashboard = () => {
                   <span className="ms-2 d-none d-sm-inline">Departments </span>
                 </Link>
               </li>
-{/*  */}
+              {/*  */}
               <li className="w-100">
                 <Link
                   to="/dashboard/projects"
@@ -104,6 +103,15 @@ const Dashboard = () => {
 
               <li className="w-100">
                 <Link
+                  to="/dashboard/salaries"
+                  className="nav-link px-0 align-middle text-white"
+                >
+                  <i className="fs-4 bi-person ms-2"></i>
+                  <span className="ms-2 d-none d-sm-inline">Salaries</span>
+                </Link>
+              </li>
+              <li className="w-100">
+                <Link
                   to="/dashboard/profile"
                   className="nav-link px-0 align-middle text-white"
                 >
@@ -112,9 +120,7 @@ const Dashboard = () => {
                 </Link>
               </li>
               <li className="w-100" onClick={handleLogout}>
-              <Link
-                  className="nav-link px-0 align-middle text-white"
-                >
+                <Link className="nav-link px-0 align-middle text-white">
                   <i className="fs-4 bi-power ms-2"></i>
                   <span className="ms-2 d-none d-sm-inline">Logout</span>
                 </Link>
@@ -123,12 +129,13 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="col p-0 m-0 ">
-            <div className="p-2 d-flex justify-content-center shadow text-bg-secondary bg-gradient">
+          <div className="p-2 d-flex justify-content-center shadow text-bg-secondary bg-gradient">
             <h4 className="">
-                <i class="bi bi-building-gear"> </i>
-                  Employee Management System</h4>
-            </div>
-            <Outlet />
+              <i class="bi bi-building-gear"> </i>
+              Employee Management System
+            </h4>
+          </div>
+          <Outlet />
         </div>
       </div>
     </div>
