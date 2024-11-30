@@ -1,31 +1,32 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useEmployee } from './EmployeePanel/EmployeeContext';  // Import the custom hook
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { useNavigate, Link, useParams } from 'react-router-dom';  // Removed Outlet
+import { useEmployee } from './EmployeePanel/EmployeeContext';
 
 import './EmployeeDetail.css';
 
 const EmployeeDetail = () => {
   const [employee, setEmployee] = useState(null); // Set to null initially
-  const { employeeId, updateEmployeeId } = useEmployee();  // Access the employeeId from context
+  const { employeeId: contextEmployeeId } = useEmployee();  // Access employeeId from context
+  const { id } = useParams();  // Get employee ID from the URL parameters
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Employee ID from Provider:", employeeId);
+    const effectiveEmployeeId = id || contextEmployeeId;
+    console.log("Effective Employee ID:", effectiveEmployeeId);
 
-    if (!employeeId) {
+    if (!effectiveEmployeeId) {
       navigate('/'); // Redirect to home or login if employeeId is not available
       return;
     }
 
-    // Fetch employee details using the employeeId from the provider
-    axios.get(`http://localhost:3000/employee/detail/${employeeId}`)
+    // Fetch employee details using the employeeId from the URL or context
+    axios.get(`http://localhost:3000/employee/detail/${effectiveEmployeeId}`)
       .then(result => {
         setEmployee(result.data[0]); // Assuming the employee data is in the first index
       })
       .catch(err => console.log(err));
-  }, [employeeId, navigate]);
+  }, [id, contextEmployeeId, navigate]);
 
   const handleLogout = () => {
     axios.get('http://localhost:3000/employee/logout')
@@ -51,10 +52,10 @@ const EmployeeDetail = () => {
         {/* Sidebar */}
         <div className="sidebar">
           <ul className="sidebar-menu">
-            <li><Link to="/">Dashboard</Link></li>  {/* Replaced <a> with <Link> */}
-            <li><Link to="/assigned_work">Assigned Work</Link></li>  {/* Replaced <a> with <Link> */}
-            <li><Link to="/">Add Employee</Link></li>  {/* Replaced <a> with <Link> */}
-            <li><Link to="/" onClick={handleLogout}>Logout</Link></li>  {/* Replaced <a> with <Link> */}
+            <li><Link to="/">Dashboard</Link></li>
+            <li><Link to={`/employee_detail/${id || contextEmployeeId}/assigned_work`}>Assigned Work</Link></li> {/* Updated link */}
+            <li><Link to="/">Add Employee</Link></li>
+            <li><Link to="/" onClick={handleLogout}>Logout</Link></li>
           </ul>
         </div>
 
@@ -66,9 +67,6 @@ const EmployeeDetail = () => {
               <h3>Name: {employee.name}</h3>
               <h3>Email: {employee.email}</h3>
               <h3>Salary: ${employee.salary}</h3>
-            </div>
-            <div className="mt-3">
-              {/* Uncomment buttons as needed */}
             </div>
           </div>
         </div>
