@@ -8,6 +8,7 @@ import { getAllProjects , addProject, getAllProjectParts, getProjectPartsByProje
 import { addCustomer,  deleteCustomerById, editCustomer, getAllCustomers, getCustomerById } from "./Routes/customer/customer.js";
 import { addDepartment, deleteDepartment, getAllDepartments, getAllEmployees, updateDepartment } from "./Routes/departments/departments.js";
 import { deleteAttendance, getAttendanceByDate, getAttendanceByMonth, submitAttendance, updateAttendance } from "./Routes/attendance/attendance.js";
+import { getEmployeeProjectParts } from "./Routes/EmployeePanel/AssignedWork.js";
 
 const app = express() 
 app.use(cors({
@@ -71,6 +72,9 @@ app.get('/get_attendanceByMonth',getAttendanceByMonth)
 app.put('/update_attendance',updateAttendance)
 app.delete('/delete_attendance',deleteAttendance)
 // app.put('/update_attendance',updateAttendance)
+
+// Employee Panel
+app.get('/employee_detail/:employeeId/assigned_work', getEmployeeProjectParts);
 
 
 app.get('/verify',verifyUser, (req, res)=> {
