@@ -53,8 +53,9 @@ const EmployeeDetail = () => {
         <div className="sidebar">
           <ul className="sidebar-menu">
             <li><Link to="/">Dashboard</Link></li>
-            <li><Link to={`/employee_detail/${id || contextEmployeeId}/assigned_work`}>Assigned Work</Link></li> {/* Updated link */}
-            <li><Link to="/">Add Employee</Link></li>
+            <li><Link to={`/employee_detail/${id || contextEmployeeId}/assigned_work`}>Assigned Work</Link></li>
+            {/* Link for Attendance */}
+            <li><Link to={`/employee_detail/${id || contextEmployeeId}/attendance`}>Attendance</Link></li> {/* Added Attendance Link */}
             <li><Link to="/" onClick={handleLogout}>Logout</Link></li>
           </ul>
         </div>

@@ -30,6 +30,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { EmployeeProvider } from './Components/EmployeePanel/EmployeeContext';
 import AssignedWork from './Components/EmployeePanel/AssignedWork';
+import EmpAttendance from './Components/EmployeePanel/EmpAttendance';
 
 function App() {
   return (
@@ -43,8 +44,11 @@ function App() {
           {/* Employee Detail Route */}
           <Route path="/employee_detail/:id" element={<EmployeeDetail />} />
 
-          {/* Separate route for Assigned Work */}
+          {/* Link to Assigned Work */}
           <Route path="/employee_detail/:id/assigned_work" element={<AssignedWork />} />
+
+          {/* Link to Attendance */}
+          <Route path="/employee_detail/:employeeId/attendance" element={<EmpAttendance />} />
 
           <Route path="/dashboard" element={
             <PrivateRoute>

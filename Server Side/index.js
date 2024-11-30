@@ -7,8 +7,9 @@ import cookieParser from "cookie-parser";
 import { getAllProjects , addProject, getAllProjectParts, getProjectPartsByProjectId, getProjectById, deleteProjectPart, addProjectPart, getProjectIds, getProjectPartById, updateProjectPartById, updateProject, deleteProject} from "./Routes/projects/projectController.js";
 import { addCustomer,  deleteCustomerById, editCustomer, getAllCustomers, getCustomerById } from "./Routes/customer/customer.js";
 import { addDepartment, deleteDepartment, getAllDepartments, getAllEmployees, updateDepartment } from "./Routes/departments/departments.js";
-import { deleteAttendance, getAttendanceByDate, getAttendanceByMonth, submitAttendance, updateAttendance } from "./Routes/attendance/attendance.js";
+import { deleteAttendance, getAttendanceByDate, getAttendanceByEmpIdAndDate, getAttendanceByMonth, submitAttendance, updateAttendance } from "./Routes/attendance/attendance.js";
 import { addSubmission, getEmployeeProjectParts, updateProjectPartStatusById } from "./Routes/EmployeePanel/AssignedWork.js";
+import { getEmployeeAttendance } from "./Routes/EmployeePanel/EmpAttendance.js";
 
 const app = express() 
 app.use(cors({
@@ -77,6 +78,9 @@ app.delete('/delete_attendance',deleteAttendance)
 app.get('/employee_detail/:employeeId/assigned_work', getEmployeeProjectParts);
 app.post('/submit_work',addSubmission)
 app.put('/update_projectPart_status/:partId', updateProjectPartStatusById);
+app.get('/get_empAttendance/:id', getAttendanceByEmpIdAndDate);
+app.get('/get_empAttendance_count/:employeeId', getEmployeeAttendance); // New route for employee attendance
+
 
 app.get('/verify',verifyUser, (req, res)=> {
     return res.json({Status: true, role: req.role, id: req.id})

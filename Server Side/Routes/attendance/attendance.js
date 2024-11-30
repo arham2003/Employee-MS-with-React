@@ -164,3 +164,47 @@ export const deleteAttendance = (req, res) => {
         res.status(200).json({ message: 'Attendance records deleted successfully.' });
     });
 };
+
+// src/controllers/attendanceController.js
+
+
+// Function to get attendance for a specific employee by employee ID, month, and year
+export const getAttendanceByEmpIdAndDate = (req, res) => {
+    const { id } = req.params;  // Employee ID from URL params
+    const { month, year } = req.query;  // Month and Year from query parameters
+
+    // Validate the inputs
+    if (!id) {
+        return res.status(400).json({ error: 'Employee ID is required' });
+    }
+
+    if (!month || !year) {
+        return res.status(400).json({ error: 'Month and Year are required' });
+    }
+
+    // SQL query to fetch attendance for the given employee ID, month, and year
+    const query = `
+        SELECT e.id AS employee_id, e.name, a.status, a.date
+        FROM attendance a
+        JOIN employee e ON a.employee_id = e.id
+        WHERE a.employee_id = ? AND MONTH(a.date) = ? AND YEAR(a.date) = ?
+    `;
+
+    // Execute the query
+    con.query(query, [id, month, year], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database query error: ' + err.message });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: `No attendance records found for employee ID ${id} in ${month}/${year}` });
+        }
+
+        // Send the attendance data as a JSON response
+        return res.status(200).json(results);
+    });
+};
+
+
+
+

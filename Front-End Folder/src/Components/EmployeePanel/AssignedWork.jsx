@@ -129,7 +129,7 @@ const AssignedWork = () => {
           <ul className="sidebar-menu">
             <li><Link to="/">Dashboard</Link></li>
             <li><Link to={`/employee_detail/${id}/assigned_work`}>Assigned Work</Link></li>
-            <li><Link to="/">Add Employee</Link></li>
+            <li><Link to={`/employee_detail/${id || contextEmployeeId}/attendance`}>Attendance</Link></li> {/* Added Attendance Link */}
             <li><Link to="/">Logout</Link></li>
           </ul>
         </div>
