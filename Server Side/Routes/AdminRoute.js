@@ -41,6 +41,18 @@ router.get('/departments', (req, res) => {
 }); 
 
 
+router.post('/add_category', (req, res) => {
+    console.log("Add Category API Hit");  // Log to verify if the API is being called
+    const sql = "INSERT INTO category (`name`) VALUES (?)";
+    con.query(sql, [req.body.category], (err, result) => {
+        if (err) {
+            console.error("Error in query:", err); // Log detailed error
+            return res.status(500).json({ Status: false, Error: "Query Error" });
+        }
+        return res.status(200).json({ Status: true });
+    });
+});
+
 // image upload 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {

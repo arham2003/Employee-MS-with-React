@@ -25,7 +25,7 @@ const Dashboard = () => {
               className="d-flex align-items-center pb-3 mb-md-1 mt-md-3 me-md-auto text-white text-decoration-none"
             >
               <span className="fs-5 fw-bolder d-none d-sm-inline">
-                Gray Coders
+                Code With PK
               </span>
             </Link>
             <ul
@@ -37,7 +37,7 @@ const Dashboard = () => {
                   to="/dashboard"
                   className="nav-link text-white px-0 align-middle"
                 >
-                  <i class="bi bi-houses ms-2 fs-4"></i>
+                  <i className="fs-4 bi-speedometer2 ms-2"></i>
                   <span className="ms-2 d-none d-sm-inline">Dashboard</span>
                 </Link>
               </li>
@@ -57,7 +57,7 @@ const Dashboard = () => {
                   to="/dashboard/customer"
                   className="nav-link px-0 align-middle text-white"
                 >
-                  <i class="bi bi-person-workspace ms-2 fs-4"></i>
+                  <i className="fs-4 bi-people ms-2"></i>
                   <span className="ms-2 d-none d-sm-inline">
                     Manage Customers
                   </span>
@@ -68,7 +68,7 @@ const Dashboard = () => {
                   to="/dashboard/departments"
                   className="nav-link px-0 align-middle text-white"
                 >
-                  <i class="bi bi-building-add ms-2 fs-4"></i>
+                  <i className="fs-4 bi-columns ms-2"></i>
                   <span className="ms-2 d-none d-sm-inline">Departments </span>
                 </Link>
               </li>
@@ -78,7 +78,7 @@ const Dashboard = () => {
                   to="/dashboard/projects"
                   className="nav-link px-0 align-middle text-white"
                 >
-                  <i class="bi bi-file-bar-graph ms-2 fs-4"></i>
+                  <i className="fs-4 bi-columns ms-2"></i>
                   <span className="ms-2 d-none d-sm-inline">Projects </span>
                 </Link>
               </li>
@@ -125,13 +125,8 @@ const Dashboard = () => {
         <div className="col p-0 m-0 ">
             <div className="p-2 d-flex justify-content-center shadow text-bg-secondary bg-gradient">
             <h4 className="">
-            <Link to="/dashboard"
-                  className="nav-link text-white px-0 align-middle "
-                >
                 <i class="bi bi-building-gear"> </i>
-                  Employee Management System
-                  </ Link>
-                  </h4>
+                  Employee Management System</h4>
             </div>
             <Outlet />
         </div>
