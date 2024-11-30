@@ -6,26 +6,105 @@ const AssignedWork = () => {
   const { id } = useParams(); // Extract the employee ID from the URL
   const [assignedWork, setAssignedWork] = useState([]); // State to hold assigned work data
   const [loading, setLoading] = useState(true); // Loading state
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
+  const [selectedPartId, setSelectedPartId] = useState(null); // State to hold selected part ID for the file upload
+  const [url, setUrl] = useState(''); // State to hold the URL input
+  const [error, setError] = useState(null); // State to hold error messages
+  const [partDetails, setPartDetails] = useState(null); // State to hold project part details
 
   useEffect(() => {
-    console.log("Id = ",id)
-    // Fetch data from the API when the component mounts
+    // Fetch assigned work data when the component mounts
     axios.get(`http://localhost:3000/employee_detail/${id}/assigned_work`)
       .then((response) => {
         if (response.data.Status) {
           setAssignedWork(response.data.Result); // Use the "Result" key to get the data
         } else {
-          console.error("No assigned work found for this employee.");
+          setError("No assigned work found for this employee.");
         }
         setLoading(false); // Set loading to false once data is fetched
       })
       .catch((error) => {
         console.error("Error fetching assigned work:", error);
+        setError("Error fetching assigned work.");
         setLoading(false); // Stop loading in case of error
       });
-      console.log(assignedWork)
-
   }, [id]); // Refetch when the `id` changes
+
+  // Function to load project part details by ID
+  const fetchPartDetails = (partId) => {
+    axios.get(`http://localhost:3000/get_projectpart/${partId}`)
+      .then((response) => {
+        if (response.data) {
+          setPartDetails(response.data); // Set the project part details
+        } else {
+          setError("Failed to load project part details.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching project part details:", error);
+        setError("Error fetching project part details.");
+      });
+  };
+
+  // Handle the "Add Work" button click
+  const handleAddWork = (partId) => {
+    setSelectedPartId(partId); // Set selected part ID for the file upload
+    fetchPartDetails(partId); // Load the project part details
+    setIsModalOpen(true); // Open the URL input modal
+  };
+
+  // Handle URL input change
+  const handleUrlChange = (event) => {
+    setUrl(event.target.value); // Set the input URL
+  };
+
+  // Handle URL submission and update status in the backend
+  const handleUrlSubmit = () => {
+    if (!url) {
+      alert("Please enter a URL.");
+      return;
+    }
+
+    const data = {
+      emp_id: id, // Pass employee ID
+      part_id: selectedPartId, // Pass part ID
+      submission_url: url, // Use the URL instead of a file
+      submission_datetime: new Date().toISOString(), // Use current datetime
+    };
+    
+    console.log("PartId", selectedPartId)
+
+    // First, submit the URL to the backend
+    axios.post('http://localhost:3000/submit_work', data)
+      .then((response) => {
+        if (response.data.Status) {
+          alert('URL submitted successfully');
+
+          // After URL is successfully submitted, update the status to 'Submitted'
+          axios.put(`http://localhost:3000/update_projectPart_status/${selectedPartId}`)
+            .then((updateResponse) => {
+              if (updateResponse.data.Status) {
+                alert('Status updated to Submitted');
+                setIsModalOpen(false); // Close the modal after successful update
+              } else {
+                alert('Failed to update status');
+              }
+            })
+            .catch((error) => {
+              console.error('Error updating status:', error);
+              alert('Error updating status');
+            });
+        } else {
+          alert('Failed to submit URL');
+        }
+        setIsModalOpen(false); // Close the modal after submission
+      })
+      .catch((error) => {
+        console.error('Error submitting URL:', error);
+        alert('Error submitting URL');
+        setIsModalOpen(false); // Close the modal after error
+      });
+  };
 
   // Render a loading message while the data is being fetched
   if (loading) {
@@ -59,8 +138,10 @@ const AssignedWork = () => {
         <div className="content flex-grow-1">
           <div className="d-flex justify-content-center flex-column align-items-center mt-3">
             <h2>Assigned Work</h2>
-            {/* <p>Details of assigned work for employee {assignedWork.employee_name}</p> */}
           </div>
+
+          {/* Error Message */}
+          {error && <div className="alert alert-danger">{error}</div>}
 
           {/* Assigned Work Table */}
           <div className="table-responsive">
@@ -73,6 +154,7 @@ const AssignedWork = () => {
                   <th>End Date</th>
                   <th>Status</th>
                   <th>Contribution (%)</th>
+                  <th>Action</th> {/* New column for the Add Work button */}
                 </tr>
               </thead>
               <tbody>
@@ -85,11 +167,22 @@ const AssignedWork = () => {
                       <td>{new Date(work.end_date).toLocaleDateString()}</td>
                       <td>{work.status}</td>
                       <td>{work.contribution_percentage}%</td>
+                      <td>
+                        {/* Only show the button if the status is not "Submitted" */}
+                        {work.status !== 'Submitted' && (
+                          <button 
+                            className="btn btn-primary"
+                            onClick={() => handleAddWork(work.part_id)} // Call the handler with the part_id
+                          >
+                            Add Work
+                          </button>
+                        )}
+                      </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6">No assigned work found</td>
+                    <td colSpan="7">No assigned work found</td>
                   </tr>
                 )}
               </tbody>
@@ -97,6 +190,32 @@ const AssignedWork = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal for URL Input */}
+      {isModalOpen && partDetails && (
+        <div className="modal" style={{ display: 'block', position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+          <div className="modal-content" style={{ position: 'relative', margin: '15% auto', padding: '20px', backgroundColor: 'white', width: '300px' }}>
+            <h5>Submit Work URL</h5>
+            <div>
+              <p><strong>Part Name:</strong> {partDetails.part_name}</p>
+              <p><strong>Project Name:</strong> {partDetails.project_name}</p>
+              <p><strong>Start Date:</strong> {new Date(partDetails.start_date).toLocaleDateString()}</p>
+              <p><strong>End Date:</strong> {new Date(partDetails.end_date).toLocaleDateString()}</p>
+            </div>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter URL"
+              value={url}
+              onChange={handleUrlChange}
+            />
+            <div className="mt-2">
+              <button className="btn btn-success" onClick={handleUrlSubmit}>Submit URL</button>
+              <button className="btn btn-secondary ml-2" onClick={() => setIsModalOpen(false)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

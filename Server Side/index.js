@@ -8,7 +8,7 @@ import { getAllProjects , addProject, getAllProjectParts, getProjectPartsByProje
 import { addCustomer,  deleteCustomerById, editCustomer, getAllCustomers, getCustomerById } from "./Routes/customer/customer.js";
 import { addDepartment, deleteDepartment, getAllDepartments, getAllEmployees, updateDepartment } from "./Routes/departments/departments.js";
 import { deleteAttendance, getAttendanceByDate, getAttendanceByMonth, submitAttendance, updateAttendance } from "./Routes/attendance/attendance.js";
-import { getEmployeeProjectParts } from "./Routes/EmployeePanel/AssignedWork.js";
+import { addSubmission, getEmployeeProjectParts, updateProjectPartStatusById } from "./Routes/EmployeePanel/AssignedWork.js";
 
 const app = express() 
 app.use(cors({
@@ -75,7 +75,8 @@ app.delete('/delete_attendance',deleteAttendance)
 
 // Employee Panel
 app.get('/employee_detail/:employeeId/assigned_work', getEmployeeProjectParts);
-
+app.post('/submit_work',addSubmission)
+app.put('/update_projectPart_status/:partId', updateProjectPartStatusById);
 
 app.get('/verify',verifyUser, (req, res)=> {
     return res.json({Status: true, role: req.role, id: req.id})
