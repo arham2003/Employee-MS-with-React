@@ -12,6 +12,7 @@ import { addSubmission, getEmployeeProjectParts, updateProjectPartStatusById } f
 import { getEmployeeAttendance, markAttendanceAsPresent } from "./Routes/EmployeePanel/EmpAttendance.js";
 import { checkPaymentStatus, getEmployeePayments, getEmployeeSalaries, getPayments, paySalary } from "./Routes/Salaries/salaries.js";
 import { getWorkSubmissions, updateSubmissionStatus } from "./Routes/SubmittedWork/SubmittedWork.js";
+import { getApprovedProjectParts, getEmployeeContribution } from "./Routes/EmployeePanel/Dashboard.js";
 
 const app = express() 
 app.use(cors({
@@ -94,6 +95,10 @@ app.get('/get_empPayments',getEmployeePayments)
 // Submitted Work
 app.get('/get_submittedWork',getWorkSubmissions)
 app.put('/update_submission_status',updateSubmissionStatus)
+
+// Employee Dashboard
+app.get('/get_empContributions',getEmployeeContribution)
+app.get('/approved_parts',getApprovedProjectParts)
 
 
 
