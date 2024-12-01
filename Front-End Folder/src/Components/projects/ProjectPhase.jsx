@@ -213,6 +213,8 @@ function ProjectPhase({ projectParts, handleDelete, handleAddPart }) {
                   <option value="Not Started">Not Started</option>
                   <option value="In Progress">In Progress</option>
                   <option value="Completed">Completed</option>
+                  <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
                 </Form.Control>
               </Form.Group>
               <Form.Group controlId="contributionPercentage">

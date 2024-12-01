@@ -113,6 +113,8 @@ function ProjectUpdateForm({ project }) {
           <option value="Pending">Pending</option>
           <option value="In Progress">In Progress</option>
           <option value="Completed">Completed</option>
+          <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
         </select>
       </div>
       <button type="submit" className="btn btn-primary">Save Changes</button>

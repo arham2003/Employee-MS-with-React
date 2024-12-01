@@ -6,7 +6,7 @@ import Dashboard from './Components/Dashboard';
 import Home from './Components/Home';
 import Employee from './Components/Employee';
 import Category from './Components/Category';
-import Profile from './Components/Profile';
+import SubmittedWork from './Components/Profile';
 import AddCategory from './Components/AddCategory';
 import AddEmployee from './Components/AddEmployee';
 import EditEmployee from './Components/EditEmployee';
@@ -63,7 +63,7 @@ function App() {
             <Route path="/dashboard/attendance" element={<AttendanceRecords />}></Route>
             <Route path="/dashboard/take_attendance" element={<AttendanceForm />}></Route>
             <Route path="/dashboard/update_attendance" element={<UpdateForm />}></Route>
-            <Route path="/dashboard/profile" element={<Profile />}></Route>
+            <Route path="/dashboard/profile" element={<SubmittedWork />}></Route>
             <Route path="/dashboard/projects" element={<Projects />}></Route>
             <Route path="/dashboard/project_phase" element={<ProjectPhaseForm />}></Route>
             <Route path="/dashboard/projectForm" element={<ProjectForm />}></Route>

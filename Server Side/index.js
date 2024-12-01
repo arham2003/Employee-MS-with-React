@@ -11,6 +11,7 @@ import { deleteAttendance, getAttendanceByDate, getAttendanceByEmpIdAndDate, get
 import { addSubmission, getEmployeeProjectParts, updateProjectPartStatusById } from "./Routes/EmployeePanel/AssignedWork.js";
 import { getEmployeeAttendance, markAttendanceAsPresent } from "./Routes/EmployeePanel/EmpAttendance.js";
 import { checkPaymentStatus, getEmployeePayments, getEmployeeSalaries, getPayments, paySalary } from "./Routes/Salaries/salaries.js";
+import { getWorkSubmissions, updateSubmissionStatus } from "./Routes/SubmittedWork/SubmittedWork.js";
 
 const app = express() 
 app.use(cors({
@@ -89,6 +90,10 @@ app.post('/pay_salary', paySalary); // Endpoint to submit salary data
 app.get('/get_payments', getPayments); // Endpoint to get all payment records
 app.get('/check_payment_status',checkPaymentStatus)
 app.get('/get_empPayments',getEmployeePayments)
+
+// Submitted Work
+app.get('/get_submittedWork',getWorkSubmissions)
+app.put('/update_submission_status',updateSubmissionStatus)
 
 
 
