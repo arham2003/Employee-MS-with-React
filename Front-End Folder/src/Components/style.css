@@ -11,9 +11,20 @@
     color: white;
 }
 
-ul li :hover {
+/* Style for individual list items */
+#menu li {
+    padding: 10px 6px 10px 6px;
+    border-radius: 10px;
+    transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+    position: relative;
+  }
+  
+  #menu li:hover {
     background-color: rgb(65, 156, 94);
-}
+    color: white;
+    cursor: pointer;
+    transform: scale(1.1); /* Zoom in the item */
+  }
 
 .employee_image {
     width: 40px;

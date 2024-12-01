@@ -100,9 +100,7 @@ router.post('/add_employee', upload.single('image'), (req, res) => {
             });
       
             const mailOptions = {
-              from: {
-                address: process.env.EMAIL_USER
-              },
+              from: process.env.EMAIL_USER,
               to: req.body.email, // Employee's email
               subject: "Welcome to the No. 1 Company! 🥳",
               text: `Hi ${req.body.name},\n\nYour account has been created successfully.\n\nHere are your login details:\nEmail: ${req.body.email}\nPassword: ${req.body.password}\n\nPlease log in and change your password for security.\n\nBest regards,\nGray Coders`,

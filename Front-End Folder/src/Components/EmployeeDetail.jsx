@@ -53,11 +53,11 @@ const EmployeeDetail = () => {
     axios.get('http://localhost:3000/employee/logout')
       .then(result => {
         if (result.data.Status) {
-          localStorage.removeItem('employeeId');
-          localStorage.removeItem('valid');
-          navigate('/'); // Redirect after logging out
+          localStorage.clear();
+          window.location.href = '/'; // Force a full reload
         }
-      }).catch(err => console.log(err));
+      })
+      .catch(err => console.log(err));
   };
 
   const handleMonthChange = (e) => {
@@ -74,16 +74,25 @@ const EmployeeDetail = () => {
 
   return (
     <div className="employee-page">
-      <div className="p-2 d-flex justify-content-center shadow header">
-        <h4>Employee Management System</h4>
+      <div className="p-2 d-flex justify-content-center shadow header bg-secondary bg-gradient">
+        <h4>
+        <i class="bi bi-building-gear"> </i>
+          Employee Management System</h4>
       </div>
       <div className="d-flex">
         {/* Sidebar */}
-        <div className="sidebar">
+        <div className="sidebar bg-dark bg-gradient">
           <ul className="sidebar-menu">
-            <li><Link to="/">Dashboard</Link></li>
-            <li><Link to={`/employee_detail/${id || contextEmployeeId}/assigned_work`}>Assigned Work</Link></li>
-            <li><Link to={`/employee_detail/${id || contextEmployeeId}/attendance`}>Attendance</Link></li>
+            <li>
+              <Link to="/">
+              Dashboard</Link>
+            </li>
+            <li>
+              <Link to={`/employee_detail/${id || contextEmployeeId}/assigned_work`}>
+               Assigned Work</Link></li>
+            <li >
+              <Link to={`/employee_detail/${id || contextEmployeeId}/attendance`}>
+               Attendance</Link></li>
             <li><Link to="/" onClick={handleLogout}>Logout</Link></li>
           </ul>
         </div>
