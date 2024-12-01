@@ -2,6 +2,7 @@ import express from "express";
 import cors from 'cors'
 import { adminRouter } from "./Routes/AdminRoute.js";
 import { EmployeeRouter } from "./Routes/EmployeeRoute.js";
+import { DeleteNotifications, getNotifications } from './Routes/projects/NotificationController.js';
 import Jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 import { getAllProjects , addProject, getAllProjectParts, getProjectPartsByProjectId, getProjectById, deleteProjectPart, addProjectPart, getProjectIds, getProjectPartById, updateProjectPartById, updateProject, deleteProject} from "./Routes/projects/projectController.js";
@@ -44,6 +45,9 @@ const verifyUser = (req, res, next) => {
 app.get('/project_parts', getAllProjectParts);  // Fetch all project parts
 app.get('/project_parts/:projectId', getProjectPartsByProjectId);
 app.get('/api/projects/:id', getProjectById);
+
+app.get('/notifications', getNotifications);
+app.delete('/delete_notifications/', DeleteNotifications)
 
 app.get('/projects',getAllProjects)
 app.post('/projects/add',addProject)

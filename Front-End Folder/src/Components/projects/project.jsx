@@ -7,7 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';  // Import Toastify CSS
 
 function Projects() {
   const [projects, setProjects] = useState([]);
-
+  const [notifications, setNotifications] = useState([]);
+  const [collapsed, setCollapsed] = useState(true);
   // Fetch projects data from the backend
   useEffect(() => {
     const fetchProjects = async () => {
@@ -21,6 +22,21 @@ function Projects() {
     };
 
     fetchProjects();
+  }, []);
+
+  // Fetch notifications
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/notifications');
+        const data = await response.json();
+        setNotifications(data);
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    };
+
+    fetchNotifications();
   }, []);
 
   // Delete project and its related parts
@@ -46,13 +62,91 @@ function Projects() {
       }
     }
   };
+
+    // Handle clicking outside the sidebar to close it
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (event.target.closest('.notification-sidebar') || event.target.closest('.notifications-container')) {
+          // Don't close the sidebar if the click is inside it
+          return;
+        }
+        // Close the sidebar if clicked outside
+        setIsSidebarVisible(false);
+        setOverlayVisible(false);
+      };
+  
+      // Listen for clicks outside of the sidebar
+      document.addEventListener('click', handleClickOutside);
+  
+      return () => {
+        document.removeEventListener('click', handleClickOutside);
+      };
+    }, []);
+
+  const clearNotifications = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/delete_notifications', {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setNotifications([]);  
+      } else {
+        toast.error('Error clearing notifications.');
+      }
+    } catch (error) {
+      toast.error('Error clearing notifications.');
+      console.error('Error clearing notifications:', error);
+    }
+  };
   
   return (
     <div>
       <div className="projects-container">
         <div className="header-container">
-          <h3>Project List</h3>
+          <h3>Project List
+          </h3>
+          
+          {/* Notifications Button */}
+          <div>
+            <button
+              type="button"
+              className="btn btn-secondary float-end"
+              onClick={() => setCollapsed(!collapsed)}  // Toggle the collapse state
+            >
+              <i class="bi bi-bell fs-4"></i>
+            </button>
+          </div>
         </div>
+
+
+
+        {/* Notifications Card */}
+        <div
+          className={`notifications-card ${collapsed ? 'collapsed' : 'expanded'} notification-sidebar`}
+        >
+          <Link
+              className="float-end"
+              onClick={clearNotifications}
+            >
+              Clear All
+            </Link>
+          <div className="card card-body">
+            {/* Clear All Notifications Link */}
+            
+
+            {notifications.length === 0 ? (
+              <p>No notifications available.</p>
+            ) : (
+              <ul>
+                {notifications.map((note) => (
+                  <li key={note.id}>{note.message}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+
         <Link to="/dashboard/projectForm" className="btn btn-success">
           Add Project
         </Link>

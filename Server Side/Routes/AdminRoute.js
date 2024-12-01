@@ -221,6 +221,15 @@ router.get('/salary_count', (req, res) => {
     })
 })
 
+router.get('/top_employee', (req, res) => {
+    const sql = "SELECT name, salary FROM employee ORDER BY salary DESC LIMIT 1";
+    con.query(sql, (err, result) => {
+        if (err) return res.json({ Status: false, Error: "Query Error: " + err });
+        return res.json({ Status: true, Result: result });
+    });
+});
+
+
 router.get('/admin_records', (req, res) => {
     const sql = "select * from admin"
     con.query(sql, (err, result) => {
