@@ -33,7 +33,7 @@ function ProjectUpdateForm({ project }) {
 
     try {
       const response = await axios.put(
-        `http://localhost:3000/update_project/${id}`,
+        `${process.env.REACT_APP_BACKEND_URL}/update_project/${id}`,
         {
           id,
           projectName,

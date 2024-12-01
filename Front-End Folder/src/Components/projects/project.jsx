@@ -13,7 +13,7 @@ function Projects() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch('http://localhost:3000/projects');  // Adjust your backend URL if needed
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/projects`);  // Adjust your backend URL if needed
         const data = await response.json();
         setProjects(data);
       } catch (error) {
@@ -28,7 +28,7 @@ function Projects() {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await fetch('http://localhost:3000/notifications');
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/notifications`);
         const data = await response.json();
         setNotifications(data);
       } catch (error) {
@@ -45,7 +45,7 @@ function Projects() {
     const confirmDelete = window.confirm('Are you sure you want to delete this project and all its related parts?');
     if (confirmDelete) {
       try {
-        const response = await fetch(`http://localhost:3000/projects/${projectId}`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/projects/${projectId}`, {
           method: 'DELETE',
         });
 
@@ -85,7 +85,7 @@ function Projects() {
 
   const clearNotifications = async () => {
     try {
-      const response = await fetch('http://localhost:3000/delete_notifications', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/delete_notifications`, {
         method: 'DELETE',
       });
 

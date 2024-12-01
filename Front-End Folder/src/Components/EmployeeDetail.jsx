@@ -25,7 +25,7 @@ const EmployeeDetail = () => {
     }
 
     // Fetch employee details
-    axios.get(`http://localhost:3000/employee/detail/${effectiveEmployeeId}`)
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/employee/detail/${effectiveEmployeeId}`)
       .then(result => {
         setEmployee(result.data[0]); // Assuming the employee data is in the first index
       })
@@ -33,7 +33,7 @@ const EmployeeDetail = () => {
 
     // Fetch the total contribution for this employee for the selected month and year
     if (effectiveEmployeeId && month && year) {
-      axios.get(`http://localhost:3000/get_empContributions?year=${year}&month=${month}`)
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/get_empContributions?year=${year}&month=${month}`)
         .then(result => {
           setTotalContribution(result.data);
         })
@@ -41,7 +41,7 @@ const EmployeeDetail = () => {
     }
 
     // Fetch the approved project parts for the selected month and year
-    axios.get(`http://localhost:3000/approved_parts?year=${year}&month=${month}`)
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/approved_parts?year=${year}&month=${month}`)
       .then(result => {
         setApprovedParts(result.data); // Set the approved parts data
       })
@@ -50,7 +50,7 @@ const EmployeeDetail = () => {
   }, [id, contextEmployeeId, navigate, month, year]);
 
   const handleLogout = () => {
-    axios.get('http://localhost:3000/employee/logout')
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/employee/logout`)
       .then(result => {
         if (result.data.Status) {
           localStorage.clear();

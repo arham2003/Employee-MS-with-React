@@ -13,7 +13,7 @@ const SalaryTracker = () => {
   useEffect(() => {
     const fetchEmployeeData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/get_empPayments`, {
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/get_empPayments`, {
           params: { 
             month: selectedMonth, 
             year: selectedYear 
