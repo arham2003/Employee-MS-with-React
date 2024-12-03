@@ -12,7 +12,7 @@ const Login = () => {
   
     const handleSubmit = async (event) => {
       event.preventDefault();
-  
+      console.log("Connecting to:", `${process.env.REACT_APP_BACKEND_URL}/auth/adminlogin`);
       try {
         const response = await axios.post(
           `${process.env.REACT_APP_BACKEND_URL}/auth/adminlogin`,
@@ -31,7 +31,7 @@ const Login = () => {
       }
     };
 
-    
+
   return (
     <div className='d-flex justify-content-center align-items-center vh-100 loginPage'>
         <div className='p-3 rounded w-25 border loginForm'>
