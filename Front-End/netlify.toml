@@ -1,5 +1,5 @@
 [build]
-  publish = "build"    # The output directory of your React app (after running npm run build)
+  publish = "dist"    # The output directory of your React app (after running npm run build)
   command = "npm run build"  # The command to build the React app
 
 [[redirects]]
