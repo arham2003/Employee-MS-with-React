@@ -112,9 +112,6 @@ app.get('/verify',verifyUser, (req, res)=> {
     return res.json({Status: true, role: req.role, id: req.id})
 } )
 
-app.get('/', (req, res) => {
-    res.send('Welcome to the API');
-  });
 
   const PORT = 3000;
 app.listen(PORT, () => {
