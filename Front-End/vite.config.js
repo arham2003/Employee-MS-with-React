@@ -3,9 +3,12 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/', // Ensures proper asset paths for deployment
   build: {
-    outDir: 'dist',
-    assetsDir: 'assets',
+    outDir: 'build', // Custom output directory for Netlify
+    assetsDir: 'assets', // Directory for assets within the build folder
+  },
+  server: {
+    port: 3000, // Optional: Specify a dev server port
+    open: true, // Automatically open in browser during development
   },
 });
