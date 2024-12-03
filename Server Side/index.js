@@ -16,8 +16,9 @@ import { getWorkSubmissions, updateSubmissionStatus } from "./Routes/SubmittedWo
 import { getApprovedProjectParts, getEmployeeContribution } from "./Routes/EmployeePanel/Dashboard.js";
 
 const app = express() 
+const frontendURL = process.env.FRONTEND_URL
 app.use(cors({
-    origin: ["https://graycoders.netlify.app/"],
+    origin: [frontendURL],
     methods: ['GET', 'POST', 'PUT', "DELETE"],
     credentials: true
 }))
