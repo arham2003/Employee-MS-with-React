@@ -115,8 +115,8 @@ app.get('/verify',verifyUser, (req, res)=> {
 app.get('/', (req, res) => {
     res.send('Welcome to the API');
   });
-  
 
-app.listen(3000, () => {
-    console.log("Server is running")
-})
+  const PORT = process.env.MYSQLPORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
