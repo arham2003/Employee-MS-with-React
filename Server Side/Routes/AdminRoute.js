@@ -10,23 +10,43 @@ import 'dotenv/config';
 const router = express.Router();
 
 router.post("/adminlogin", (req, res) => {
-  const sql = "SELECT * from admin Where email = ? and password = ?";
-  con.query(sql, [req.body.email, req.body.password], (err, result) => {
-    if (err) return res.json({ loginStatus: false, Error: "Query error" });
-    if (result.length > 0) {
-      const email = result[0].email;
-      const token = jwt.sign(
-        { role: "admin", email: email, id: result[0].id },
-        "jwt_secret_key",
-        { expiresIn: "1d" }
-      );
-      res.cookie('token', token)
-      return res.json({ loginStatus: true });
-    } else {
-        return res.json({ loginStatus: false, Error:"wrong email or password" });
+    const { email, password } = req.body;
+  
+    // Validate input
+    if (!email || !password) {
+      return res.status(400).json({ loginStatus: false, Error: "Email and password are required" });
     }
+  
+    const sql = "SELECT * FROM admin WHERE email = ? AND password = ?";
+    
+    con.query(sql, [email, password], (err, result) => {
+      if (err) {
+        return res.status(500).json({ loginStatus: false, Error: "Database query error" });
+      }
+  
+      if (result.length > 0) {
+        const admin = result[0];
+  
+        // Generate JWT token
+        const token = jwt.sign(
+          { role: "admin", email: admin.email, id: admin.id },
+          "jwt_secret_key",
+          { expiresIn: "1d" } // Token valid for 1 day
+        );
+  
+        // Set the token as an HTTP-only cookie
+        res.cookie("token", token, {
+          httpOnly: true,
+          secure: true, // Set to true in production (requires HTTPS)
+          sameSite: "Strict", // Ensures cookie is sent in first-party context only
+        });
+  
+        return res.json({ loginStatus: true, message: "Login successful" });
+      } else {
+        return res.status(401).json({ loginStatus: false, Error: "Invalid email or password" });
+      }
+    });
   });
-});
 
 router.get('/departments', (req, res) => {
     const sql = "SELECT * FROM departments";

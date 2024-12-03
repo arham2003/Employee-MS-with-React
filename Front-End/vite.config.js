@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   base: '/', // Ensures proper asset paths for deployment
   build: {
-    outDir: '../dist',
+    outDir: 'dist',
     assetsDir: 'assets',
   },
 });
