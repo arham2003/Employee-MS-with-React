@@ -16,12 +16,24 @@ import { getWorkSubmissions, updateSubmissionStatus } from "./Routes/SubmittedWo
 import { getApprovedProjectParts, getEmployeeContribution } from "./Routes/EmployeePanel/Dashboard.js";
 
 const app = express() 
-const frontendURL = "https://employee-ms-with-react.vercel.app/";
-app.use(cors({
-    origin: [frontendURL],
-    methods: ['GET', 'POST', 'PUT', "DELETE"],
+
+const allowedOrigins = [
+    "http://localhost:3000", // Local development
+    "https://employee-ms-with-react.vercel.app" // Deployed frontend
+  ];
+  
+  app.use(cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
-}));
+  }));
+  
 app.use(express.json())
 // app.use(bodyParser.json());
 app.use(cookieParser())
