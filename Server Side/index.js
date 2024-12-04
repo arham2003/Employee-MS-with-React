@@ -23,17 +23,11 @@ const allowedOrigins = [
   ];
   
   app.use(cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
   }));
-  
+
 app.use(express.json())
 // app.use(bodyParser.json());
 app.use(cookieParser())
