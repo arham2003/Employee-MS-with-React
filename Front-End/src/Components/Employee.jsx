@@ -8,7 +8,7 @@ const Employee = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/auth/employee`)
+      .get(`${import.meta.env.VITE_BACKEND_URL}/auth/employee`)
       .then((result) => {
         if (result.data.Status) {
           setEmployee(result.data.Result);
@@ -21,7 +21,7 @@ const Employee = () => {
 
   const handleDelete = (id) => {
     axios
-      .delete(`${process.env.REACT_APP_BACKEND_URL}/auth/delete_employee/` + id)
+      .delete(`${import.meta.env.VITE_BACKEND_URL}/auth/delete_employee/` + id)
       .then((result) => {
         if (result.data.Status) {
           window.location.reload();

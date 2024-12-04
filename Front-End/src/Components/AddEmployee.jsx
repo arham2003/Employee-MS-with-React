@@ -20,7 +20,7 @@ import { toast, ToastContainer } from "react-toastify";
   
     useEffect(() => {
       axios
-        .get(`${process.env.REACT_APP_BACKEND_URL}/auth/departments`)
+        .get(`${import.meta.env.VITE_BACKEND_URL}/auth/departments`)
         .then((result) => {
           if (result.data.Status) {
             setCategory(result.data.Result);
@@ -44,7 +44,7 @@ import { toast, ToastContainer } from "react-toastify";
       formData.append("post", employee.post);
   
       axios
-        .post(`${process.env.REACT_APP_BACKEND_URL}/auth/add_employee`, formData)
+        .post(`${import.meta.env.VITE_BACKEND_URL}/auth/add_employee`, formData)
         .then((result) => {
           if (result.data.Status) {
             toast.success(result.data.Message || "Employee added and Email Sent successfully!");

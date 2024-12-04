@@ -19,7 +19,7 @@ const EditEmployee = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/auth/departments`)
+      .get(`${import.meta.env.VITE_BACKEND_URL}/auth/departments`)
       .then((result) => {
         if (result.data.Status) {
           setCategory(result.data.Result);
@@ -34,7 +34,7 @@ const EditEmployee = () => {
 
 
       axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/auth/employee/` + id)
+      .get(`${import.meta.env.VITE_BACKEND_URL}/auth/employee/` + id)
       .then((result) => {
         if (result.data.Result && result.data.Result[0]) {
           setEmployee({
@@ -60,7 +60,7 @@ const EditEmployee = () => {
     e.preventDefault();
 
     axios
-      .put(`${process.env.REACT_APP_BACKEND_URL}/auth/edit_employee/` + id, employee)
+      .put(`${import.meta.env.VITE_BACKEND_URL}/auth/edit_employee/` + id, employee)
       .then((result) => {
         if (result.data.Status) {
           toast.success("Employee updated successfully!");

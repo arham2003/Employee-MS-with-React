@@ -12,10 +12,10 @@ const Login = () => {
   
     const handleSubmit = async (event) => {
       event.preventDefault();
-      console.log("Connecting to:", `${process.env.REACT_APP_BACKEND_URL}/auth/adminlogin`);
+      console.log("Connecting to:", `${import.meta.env.VITE_BACKEND_URL}/auth/adminlogin`);
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_BACKEND_URL}/auth/adminlogin`,
+          `${import.meta.env.VITE_BACKEND_URL}/auth/adminlogin`,
           values
         );
   

@@ -33,7 +33,7 @@ function ProjectUpdateForm({ project }) {
 
     try {
       const response = await axios.put(
-        `${process.env.REACT_APP_BACKEND_URL}/update_project/${id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/update_project/${id}`,
         {
           id,
           projectName,

@@ -18,7 +18,7 @@ function ProjectDetail() {
   useEffect(() => {
     const fetchProjectData = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/projects/${id}`);
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/projects/${id}`);
         if (!response.ok) {
           throw new Error("Failed to fetch project data");
         }
@@ -31,7 +31,7 @@ function ProjectDetail() {
 
         // Fetch project parts after loading the project details
         try {
-          const partsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/project_parts/${id}`);
+          const partsResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/project_parts/${id}`);
           if (!partsResponse.ok) {
             throw new Error("Failed to fetch project parts");
           }

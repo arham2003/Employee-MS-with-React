@@ -21,7 +21,7 @@ function ProjectPhase({ projectParts, handleDelete, handleAddPart }) {
 
   // Fetch employees from the API when the component mounts
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/employee`)
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/employee`)
       .then((response) => response.json())
       .then((data) => {
         if (data.Status) {

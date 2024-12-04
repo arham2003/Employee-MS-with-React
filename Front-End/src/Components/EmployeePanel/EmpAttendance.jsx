@@ -22,7 +22,7 @@ const EmpAttendance = () => {
     setLoading(true);
 
     // Fetch attendance data based on employeeId, month, and year
-    axios.get(`${process.env.REACT_APP_BACKEND_URL}/get_empAttendance/${employeeId}?month=${selectedMonth}&year=${selectedYear}`)
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/get_empAttendance/${employeeId}?month=${selectedMonth}&year=${selectedYear}`)
       .then((response) => {
         setAttendanceData(response.data);
       })
@@ -31,7 +31,7 @@ const EmpAttendance = () => {
       });
 
     // Fetch attendance count based on employeeId, month, and year
-    axios.get(`${process.env.REACT_APP_BACKEND_URL}/get_empAttendance_count/${employeeId}?month=${selectedMonth}&year=${selectedYear}`)
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/get_empAttendance_count/${employeeId}?month=${selectedMonth}&year=${selectedYear}`)
       .then((response) => {
         setAttendanceCount(response.data.Result[0]);
         setLoading(false);
@@ -71,7 +71,7 @@ const EmpAttendance = () => {
   const markAttendance = (date) => {
     const formattedDate = `${selectedYear}-${selectedMonth.toString().padStart(2, '0')}-${date.toString().padStart(2, '0')}`;
     
-    axios.post(`${process.env.REACT_APP_BACKEND_URL}/mark_present/${employeeId}?date=${formattedDate}`)
+    axios.post(`${import.meta.env.VITE_BACKEND_URL}/mark_present/${employeeId}?date=${formattedDate}`)
       .then((response) => {
         console.log("Attendance marked as present:", response.data);
         setWorkAdded(true); // Mark that work has been added
