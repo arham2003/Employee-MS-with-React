@@ -74,29 +74,38 @@ router.post('/add_category', (req, res) => {
 });
 
 // image upload 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'Public/Images')
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.fieldname + "_" + Date.now() + path.extname(file.originalname))
-    }
-})
+// const storage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//         cb(null, 'Public/Images')
+//     },
+//     filename: (req, file, cb) => {
+//         cb(null, file.fieldname + "_" + Date.now() + path.extname(file.originalname))
+//     }
+// })
+
+
+const storage = multer.memoryStorage();
 const upload = multer({
-    storage: storage
-})
+    storage: storage,
+});
 // end imag eupload 
 
-router.post('/add_employee', upload.single('image'), (req, res) => {
+router.post('/add_employee', upload.single('image'), async (req, res) => {
     const sql = `INSERT INTO employee 
     (name, email, password, address, salary, image, department_id, post) 
     VALUES (?)`;
 
-    bcrypt.hash(req.body.password, 10, (err, hash) => {
-        if (err) return res.json({ Status: false, Error: "Hashing Error" });
-
+    try {
+        const hash = await bcrypt.hash(req.body.password, 10);
         const categoryId = req.body.department_id || null;
         const post = req.body.post || ''; // Default to an empty string if no post is provided
+
+        // Process the uploaded image
+        const imageBuffer = req.file.buffer; // Access the file buffer
+        const imageName = req.file.fieldname + "_" + Date.now() + path.extname(req.file.originalname);
+
+        // TODO: Upload the image buffer to a cloud storage service (like S3 or Cloudinary) here.
+        // Example: const imageUrl = await uploadToCloudStorage(imageBuffer, imageName);
 
         const values = [
             req.body.name,
@@ -104,45 +113,47 @@ router.post('/add_employee', upload.single('image'), (req, res) => {
             hash,
             req.body.address,
             req.body.salary,
-            req.file.filename,
+            imageName, // Replace this with the cloud URL once uploaded
             categoryId,
-            post  // Adding post to the values array
+            post,
         ];
-        con.query(sql, [values], (err, result) => {
+
+        con.query(sql, [values], async (err, result) => {
             if (err) return res.json({ Status: false, Error: err });
-           // Send email notification
-           const transporter = nodemailer.createTransport({
-              service: "gmail",
-              auth: {
-                user: process.env.EMAIL_USER, // Replace with your email
-                pass: process.env.EMAIL_PASS, // Replaced with app-specific password
-              },
+
+            // Send email notification
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: import.meta.env.EMAIL_USER, // Replace with your email
+                    pass: import.meta.env.EMAIL_PASS, // Replaced with app-specific password
+                },
             });
-      
+
             const mailOptions = {
-              from: process.env.EMAIL_USER,
-              to: req.body.email, // Employee's email
-              subject: "Welcome to the No. 1 Company! 🥳",
-              text: `Hi ${req.body.name},\n\nYour account has been created successfully.\n\nHere are your login details:\nEmail: ${req.body.email}\nPassword: ${req.body.password}\n\nPlease log in and change your password for security.\n\nBest regards,\nGray Coders`,
+                from: import.meta.env.EMAIL_USER,
+                to: req.body.email, // Employee's email
+                subject: 'Welcome to the No. 1 Company! 🥳',
+                text: `Hi ${req.body.name},\n\nYour account has been created successfully.\n\nHere are your login details:\nEmail: ${req.body.email}\nPassword: ${req.body.password}\n\nPlease log in and change your password for security.\n\nBest regards,\nGray Coders`,
             };
-      
+
             transporter.sendMail(mailOptions, (error, info) => {
-              if (error) {
-                console.error("Error sending email:", error);
-                return res.json({ Status: false, Error: "Email not sent" });
-              }
-              console.log("Email sent: " + info.response);
-              return res.json({
-                Status: true,
-                Message: "Employee added and email sent successfully!",
-              });
+                if (error) {
+                    console.error('Error sending email:', error);
+                    return res.json({ Status: false, Error: 'Email not sent' });
+                }
+                console.log('Email sent: ' + info.response);
+                return res.json({
+                    Status: true,
+                    Message: 'Employee added and email sent successfully!',
+                });
             });
-      
-            return res.json({ Status: true });
-           
-          });
         });
-      });
+    } catch (err) {
+        console.error('Error:', err);
+        return res.json({ Status: false, Error: 'Server error' });
+    }
+});
 
 
 // router.get('/employee', (req, res) => {
