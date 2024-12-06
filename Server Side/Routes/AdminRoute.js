@@ -91,7 +91,14 @@ const storage = multer.diskStorage({
   });
   
   // Employee addition route
-  router.post('/add_employee', upload.single('image'), async (req, res) => {
+  router.post('/add_employee', (req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*"); // Allow all domains (change '*' to your frontend URL for production)
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Max-Age", "1800");
+    res.setHeader("Access-Control-Allow-Headers", "content-type");
+    res.setHeader("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS");
+    next();  // Pass control to the next handler (the actual route)
+  }, upload.single('image'), async (req, res) => {
     try {
       const sql = `INSERT INTO employee 
         (name, email, password, address, salary, image, department_id, post) 
@@ -104,7 +111,7 @@ const storage = multer.diskStorage({
       // Handle optional fields
       const categoryId = req.body.department_id || null;
       const post = req.body.post || '';
-      const imageFilename = req.file ? req.file.filename : ""; // If no file, set to null
+      const imageFilename = req.file ? req.file.filename : ""; // If no file is uploaded, use an empty string
   
       const values = [
         req.body.name,
@@ -117,14 +124,14 @@ const storage = multer.diskStorage({
         post,
       ];
   
-      // Insert data into database
+      // Insert data into the database
       con.query(sql, [values], (err, result) => {
         if (err) {
           console.error('Database Error:', err);
           return res.json({ Status: false, Error: err });
         }
   
-        // Send welcome email if configured
+        // Send a welcome email if configured
         sendWelcomeEmail(req.body.name, req.body.email, req.body.password);
   
         return res.json({ Status: true, Message: 'Employee added successfully!' });
