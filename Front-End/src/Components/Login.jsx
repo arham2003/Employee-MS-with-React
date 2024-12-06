@@ -52,8 +52,8 @@ const Login = () => {
                 </div>
                 <button className='btn btn-success w-100 rounded-0 mb-2'>Log in</button>
                 <div className='mb-1'> 
-                    <input type="checkbox" name="tick" id="tick" className='me-2'/>
-                    <label htmlFor="password">You Agree with our terms & conditions.</label>
+                    <input type="checkbox" name="tick" id="tick" className='me-2' autoComplete='On'/>
+                    <label htmlFor="password" className='text-white'>You Agree with our terms & conditions.</label>
                 </div>
             </form>
         </div>
