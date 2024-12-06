@@ -20,7 +20,9 @@ import { toast, ToastContainer } from "react-toastify";
   
     useEffect(() => {
       axios
-        .get(`${import.meta.env.VITE_BACKEND_URL}/auth/departments`)
+        .get(`${import.meta.env.VITE_BACKEND_URL}/auth/departments`, {
+          withCredentials: true,  // Ensure credentials (cookies) are included
+        })
         .then((result) => {
           if (result.data.Status) {
             setCategory(result.data.Result);
@@ -42,14 +44,16 @@ import { toast, ToastContainer } from "react-toastify";
       if (employee.image) {
         formData.append("image", employee.image);
       }
-      
+
       formData.append("department_id", employee.department_id || "");
       formData.append("post", employee.post);
 
       console.log(`${import.meta.env.VITE_BACKEND_URL}/auth/add_employee`);
   
       axios
-        .post(`${import.meta.env.VITE_BACKEND_URL}/auth/add_employee`, formData)
+        .post(`${import.meta.env.VITE_BACKEND_URL}/auth/add_employee`, formData, {
+        withCredentials: true,  // Ensure credentials (cookies) are included
+      })
         .then((result) => {
           if (result.data.Status) {
             toast.success(result.data.Message || "Employee added and Email Sent successfully!");
