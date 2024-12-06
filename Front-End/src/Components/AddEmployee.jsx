@@ -39,7 +39,10 @@ import { toast, ToastContainer } from "react-toastify";
       formData.append("password", employee.password);
       formData.append("address", employee.address);
       formData.append("salary", employee.salary);
-      formData.append("image", employee.image || "");
+      if (employee.image) {
+        formData.append("image", employee.image);
+      }
+      
       formData.append("department_id", employee.department_id || "");
       formData.append("post", employee.post);
 

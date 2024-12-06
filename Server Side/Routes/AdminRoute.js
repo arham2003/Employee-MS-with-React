@@ -104,7 +104,7 @@ const storage = multer.diskStorage({
       // Handle optional fields
       const categoryId = req.body.department_id || null;
       const post = req.body.post || '';
-      const imageFilename = req.file ? req.file.filename : null; // If no file, set to null
+      const imageFilename = req.file ? req.file.filename : ""; // If no file, set to null
   
       const values = [
         req.body.name,
