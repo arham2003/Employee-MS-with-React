@@ -56,22 +56,23 @@ function App() {
               <Dashboard />
             </PrivateRoute>
           }>
-            <Route path="" element={<Home />}></Route>
-            <Route path="/dashboard/employee" element={<Employee />}></Route>
-            <Route path="/dashboard/customer" element={<Customer />}></Route>
-            <Route path="/dashboard/departments" element={<Departments />}></Route>
-            <Route path="/dashboard/attendance" element={<AttendanceRecords />}></Route>
-            <Route path="/dashboard/take_attendance" element={<AttendanceForm />}></Route>
-            <Route path="/dashboard/update_attendance" element={<UpdateForm />}></Route>
-            <Route path="/dashboard/profile" element={<SubmittedWork />}></Route>
-            <Route path="/dashboard/projects" element={<Projects />}></Route>
-            <Route path="/dashboard/project_phase" element={<ProjectPhaseForm />}></Route>
-            <Route path="/dashboard/projectForm" element={<ProjectForm />}></Route>
-            <Route path="/dashboard/project/:id" element={<ProjectDetail />}></Route>
-            <Route path="/dashboard/add_category" element={<AddCategory />}></Route>
-            <Route path="/dashboard/add_employee" element={<AddEmployee />}></Route>
-            <Route path="/dashboard/edit_employee/:id" element={<EditEmployee />}></Route>
-            <Route path="/dashboard/salaries" element={<SalaryTracker />}></Route>
+            {/* Nested Routes for Dashboard */}
+            <Route path="/" element={<Home />} /> {/* Dashboard Home */}
+            <Route path="employee" element={<Employee />} />
+            <Route path="customer" element={<Customer />} />
+            <Route path="departments" element={<Departments />} />
+            <Route path="attendance" element={<AttendanceRecords />} />
+            <Route path="take_attendance" element={<AttendanceForm />} />
+            <Route path="update_attendance" element={<UpdateForm />} />
+            <Route path="profile" element={<SubmittedWork />} />
+            <Route path="projects" element={<Projects />} />
+            <Route path="project_phase" element={<ProjectPhaseForm />} />
+            <Route path="projectForm" element={<ProjectForm />} />
+            <Route path="project/:id" element={<ProjectDetail />} />
+            <Route path="add_category" element={<AddCategory />} />
+            <Route path="add_employee" element={<AddEmployee />} />
+            <Route path="edit_employee/:id" element={<EditEmployee />} />
+            <Route path="salaries" element={<SalaryTracker />} />
 
           </Route>
         </Routes>
