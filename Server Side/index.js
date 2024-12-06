@@ -16,29 +16,36 @@ import { getWorkSubmissions, updateSubmissionStatus } from "./Routes/SubmittedWo
 import { getApprovedProjectParts, getEmployeeContribution } from "./Routes/EmployeePanel/Dashboard.js";
 
 const app = express() 
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://employee-ms-with-react.vercel.app"); // Allow all domains (change * to your frontend URL for production)
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Max-Age", "1800");
+  res.setHeader("Access-Control-Allow-Headers", 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
+  res.setHeader("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS");
+  next();
+});
 
 
-
-const allowedOrigins = [
-    "http://localhost:3000", // Local development
-    "https://employee-ms-with-react.vercel.app", // Deployed frontend
-    "https://employee-ms-with-react.vercel.app/dashboard",
-    "https://employee-ms-with-react-production.up.railway.app",
-    "https://employee-ms-with-react.vercel.app/dashboard/add_employee",
-  ];
+// const allowedOrigins = [
+//     "http://localhost:3000", // Local development
+//     "https://employee-ms-with-react.vercel.app", // Deployed frontend
+//     "https://employee-ms-with-react.vercel.app/dashboard",
+//     "https://employee-ms-with-react-production.up.railway.app",
+//     "https://employee-ms-with-react.vercel.app/dashboard/add_employee",
+//   ];
   
-  app.use(cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: 'Content-Type,Authorization',
-    credentials: true,
-  }));
+//   app.use(cors({
+//     origin: (origin, callback) => {
+//       if (!origin || allowedOrigins.includes(origin)) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//     allowedHeaders: 'Content-Type,Authorization',
+//     credentials: true,
+//   }));
   
 app.use(express.json())
 // app.use(bodyParser.json());
