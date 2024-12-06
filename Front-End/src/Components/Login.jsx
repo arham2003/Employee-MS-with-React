@@ -34,7 +34,7 @@ const Login = () => {
 
   return (
     <div className='d-flex justify-content-center align-items-center vh-100 loginPage'>
-        <div className='p-3 rounded w-25 border loginForm'>
+        <div className='p-3 rounded border loginForm'>
             <div className='text-warning'>
                 {error && error}
             </div>
