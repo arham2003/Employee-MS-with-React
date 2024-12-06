@@ -42,6 +42,8 @@ import { toast, ToastContainer } from "react-toastify";
       formData.append("image", employee.image || "");
       formData.append("department_id", employee.department_id || "");
       formData.append("post", employee.post);
+
+      console.log(`${import.meta.env.VITE_BACKEND_URL}/auth/add_employee`);
   
       axios
         .post(`${import.meta.env.VITE_BACKEND_URL}/auth/add_employee`, formData)

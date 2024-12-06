@@ -21,7 +21,7 @@ const Employee = () => {
 
   const handleDelete = (id) => {
     axios
-      .delete(`${import.meta.env.VITE_BACKEND_URL}/auth/delete_employee/` + id)
+      .delete(`${import.meta.env.VITE_BACKEND_URL}/auth/delete_employee/${id}`)
       .then((result) => {
         if (result.data.Status) {
           window.location.reload();
@@ -62,7 +62,7 @@ const Employee = () => {
 
                 <td>
                   <img
-                    src={`http://localhost:3000/Images/` + e.image}
+                    src={`${import.meta.env.VITE_BACKEND_URL}/Images/${e.image}`}
                     className="employee_image"
                     alt="Employee"
                   />
@@ -75,7 +75,7 @@ const Employee = () => {
                 <td>{e.category_name}</td> {/* Displaying category name */}
                 <td>
                   <Link
-                    to={`/dashboard/edit_employee/` + e.id}
+                    to={`/dashboard/edit_employee/${e.id}`}
                     className="btn btn-info btn-sm me-2"
                   >
                     Edit
