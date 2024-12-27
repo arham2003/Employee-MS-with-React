@@ -63,6 +63,21 @@ const verifyUser = (req, res, next) => {
     }
 }
 // -----------------------------------------------------------------------------------
+app.get('/', (req, res) => {
+  res.send("API is running. Use the defined routes to interact with the server.");
+});
+
+
+app.delete('/auth/delete_employee/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = "DELETE FROM employee WHERE id = ?";
+  con.query(sql, [id], (err, result) => {
+      if (err) return res.json({ Status: false, Error: "Query Error" + err });
+      return res.json({ Status: true, Result: result });
+  });
+});
+
+
 app.get('/project_parts', getAllProjectParts);  // Fetch all project parts
 app.get('/project_parts/:projectId', getProjectPartsByProjectId);
 app.get('/api/projects/:id', getProjectById);
