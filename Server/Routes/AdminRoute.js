@@ -36,10 +36,11 @@ router.post("/adminlogin", (req, res) => {
   
         // Set the token as an HTTP-only cookie
         res.cookie("token", token, {
-          httpOnly: true,
-          secure: true, // Set to true in production (requires HTTPS)
-          sameSite: "Strict", // Ensures cookie is sent in first-party context only
-        });
+          httpOnly: true,        // Cookie can't be accessed by JavaScript
+          secure: process.env.NODE_ENV === "production",  // Ensure secure cookies in production (require HTTPS)
+          sameSite: "None",      // Allow cross-origin requests to send the cookie
+          maxAge: 24 * 60 * 60 * 1000,  // Cookie expiry time (1 day)
+      });
   
         return res.json({ loginStatus: true, message: "Login successful" });
       } else {
