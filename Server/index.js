@@ -67,6 +67,9 @@ app.get('/', (req, res) => {
   res.send("API is running. Use the defined routes to interact with the server.");
 });
 
+app.get('/dashboard/employee', (req, res) => {
+  res.json({ message: "Admin Dashboard" });
+});
 
 app.delete('/auth/delete_employee/:id', (req, res) => {
   const id = req.params.id;
