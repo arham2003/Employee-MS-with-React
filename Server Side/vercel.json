@@ -6,25 +6,10 @@
         "use": "@vercel/node"
       }
     ],
-    "routes": [
-      {
-        "src": "/api/(.*)",
-        "dest": "index.js"
-      }
-    ],
-    "headers": [
+    "rewrites": [
       {
         "source": "/api/(.*)",
-        "headers": [
-          {
-            "key": "Access-Control-Allow-Origin",
-            "value": "https://<frontend-project-name>.vercel.app"
-          },
-          {
-            "key": "Access-Control-Allow-Credentials",
-            "value": "true"
-          }
-        ]
+        "destination": "/index.js"
       }
     ]
   }
