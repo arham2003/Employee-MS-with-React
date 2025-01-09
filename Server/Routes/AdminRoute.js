@@ -138,7 +138,6 @@ const storage = multer.diskStorage({
   
   // Helper function to send welcome email
   const sendWelcomeEmail = (name, email, password) => {
-    const nodemailer = require('nodemailer');
   
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -164,13 +163,6 @@ const storage = multer.diskStorage({
     });
   };
 
-// router.get('/employee', (req, res) => {
-//     const sql = "SELECT * FROM employee";
-//     con.query(sql, (err, result) => {
-//         if(err) return res.json({Status: false, Error: "Query Error"})
-//         return res.json({Status: true, Result: result})
-//     })
-// })
 
 
 router.get('/employee', (req, res) => {
